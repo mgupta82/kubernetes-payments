@@ -4,7 +4,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 		<GrpHdr>
 	
-			<MsgId>AAAA/151109-CCT/EUR/443</MsgId>
+			<MsgId>AAAA/151109-CCT/AUD/443</MsgId>
 	
 			<CreDtTm>2015-11-09T10:09:13</CreDtTm>
 	
@@ -42,19 +42,19 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 			<PmtId>
 	
-				<InstrId>AAAA/151109-CCT/EUR/443/1</InstrId>
+				<InstrId>AAAA/151109-CCT/AUD/443/1</InstrId>
 	
 				<EndToEndId>CROPS/SX-25T/2015-10-13</EndToEndId>
 	
-				<TxId>AAAA/151109-CCT/EUR/443/1</TxId>
+				<TxId>AAAA/151109-CCT/AUD/443/1</TxId>
 	
 			</PmtId>
 	
-			<IntrBkSttlmAmt Ccy="EUR">750000</IntrBkSttlmAmt>
+			<IntrBkSttlmAmt Ccy="AUD">750000</IntrBkSttlmAmt>
 	
 			<IntrBkSttlmDt>2015-11-09</IntrBkSttlmDt>
 	
-			<InstdAmt Ccy="EUR">75000</InstdAmt>
+			<InstdAmt Ccy="AUD">75000</InstdAmt>
 	
 			<ChrgBr>SHAR</ChrgBr>
 	
@@ -126,7 +126,7 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 	
 				<FinInstnId>
 	
-					<BICFI>CCCCIE2D</BICFI>
+					<BICFI>BBBBIE2D</BICFI>
 	
 				</FinInstnId>
 	
@@ -153,8 +153,12 @@ xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
 			<CdtrAcct>
 	
 				<Id>
+				
+					<Othr>
 	
-					<IBAN>IE29CCCC93115212345678</IBAN>
+						<Id>46373892034013</Id>
+	
+					</Othr>
 	
 				</Id>
 	
