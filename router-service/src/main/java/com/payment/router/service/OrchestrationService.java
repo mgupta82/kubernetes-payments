@@ -29,20 +29,29 @@ public class OrchestrationService {
 		//TODO : Step 6: Audit Service Validation 
 		
 		//TODO : Step 7: Call Core Service
-		logger.info("Calling Core Service for request message : "+messageId);
-		coreService.process(input,messageId);
-        logger.info("Core Response generated successfully for request message : "+messageId);
-		
+
 		//TODO : Step 8: Audit Service for Core
 		
 	}
 	
 	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) {
+		logger.info("Sending NACK for : "+messageId);
 		try {
 			coreService.processFailure(input, messageId, errorCode);
+			logger.info("NACK sent successfully  : "+messageId);
 		}catch(Exception ex) {
-			logger.error("Savere Error : Failed to Send NACK : "+ex);
+			logger.error("Severe Error : Failed to Send NACK . Please reconcile manually : "+ex);
 		}
 	}
+	
+	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
+		logger.info("Sending ACK for : "+messageId);
+		try {
+			coreService.process(input, messageId);
+			logger.info("ACK sent successfully  : "+messageId);
+		}catch(Exception ex) {
+			logger.error("Severe Error : Failed to Send ACK. Please reconcile manually : "+ex);
+		}
+	}	
 
 }

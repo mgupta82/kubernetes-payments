@@ -35,14 +35,16 @@ public class MessageReceiver {
 	        try {
 	        	service.process(inputDocument,messageId);
 	        	logger.info("Message Processed Successfully :" + messageId);
-	        	
+	        	service.sendAck(inputDocument, messageId);
 	        	//TODO : Save Success Response XML pay load in Database
 	        	
 	        }catch(Exception ex) {
 	        	logger.error("Failed to Process Message "+messageId, ex);
-	        	//TODO : Send and Save Failure Response XML pay load in Database
 	        	service.sendNack(inputDocument, messageId, ErrorCode.GENERIC_ERROR);
+	        	//TODO : Save Failure Response XML pay load in Database
+	        	
 	        }
+	        
 		}else {
 			logger.error("Message Id missing in Request. Unable to process message");
 		}
