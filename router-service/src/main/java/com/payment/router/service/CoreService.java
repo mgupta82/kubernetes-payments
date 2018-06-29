@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import com.payment.router.jms.MessageProducer;
 import com.payment.router.mapper.DocumentMapper;
+import com.payment.router.model.PaymentTransaction;
 
 import iso.std.iso._20022.tech.xsd.pacs_002_001.Document;
 import iso.std.iso._20022.tech.xsd.pacs_002_001.FIToFIPaymentStatusReportV09;
@@ -144,6 +145,12 @@ public class CoreService {
 		}
 		
 		messageProducer.send(document);		
+		
+	}
+	
+	public void playbackResponse(PaymentTransaction paymentTransaction) {
+		
+		//messageProducer.send(paymentTransaction.getResponse());
 		
 	}
 

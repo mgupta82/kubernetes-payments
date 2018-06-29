@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
 
+import com.payment.router.model.PaymentTransaction;
 import com.payment.router.service.CoreService;
 import com.payment.router.service.ErrorCode;
 import com.payment.router.service.OrchestrationService;
@@ -30,25 +31,44 @@ public class MessageReceiver {
 				&& inputDocument.getFIToFICstmrCdtTrf().getGrpHdr()!=null) {
 			String messageId = inputDocument.getFIToFICstmrCdtTrf().getGrpHdr().getMsgId();
 			logger.info("Message Received :" + messageId);
-			//TODO : Save Request XML pay load in Database
 			
+			//Check Duplicate Message
+			try {
+				PaymentTransaction paymentTransaction = service.findDuplicateRequest(inputDocument, messageId);
+				if(paymentTransaction!=null) {
+	        		logger.info("Duplicate Request Received "+messageId);
+	        		if(paymentTransaction.getStatus().equals("ACK") 
+	        				|| paymentTransaction.getStatus().equals("NACK")) {
+	        			service.playbackResponse(paymentTransaction, messageId);
+	        		}
+	        		return;
+				}
+			}catch(Exception ex) {
+				logger.error("Failed to check duplicate message. Unable to proceed...",ex);
+				return;
+			}
+			
+			//Process message in Core
+			PaymentTransaction paymentTransaction = null;
 	        try {
+        		paymentTransaction = service.insertPaymentRequest(inputDocument, messageId);
 	        	service.process(inputDocument,messageId);
 	        	logger.info("Message Processed Successfully :" + messageId);
 	        	service.sendAck(inputDocument, messageId);
-	        	//TODO : Save Success Response XML pay load in Database
-	        	
+	        	paymentTransaction.setStatus("ACK");
+	        	service.updatePaymentRequest(paymentTransaction, messageId);
 	        }catch(Exception ex) {
 	        	logger.error("Failed to Process Message "+messageId, ex);
 	        	service.sendNack(inputDocument, messageId, ErrorCode.GENERIC_ERROR);
-	        	//TODO : Save Failure Response XML pay load in Database
-	        	
+	        	if(paymentTransaction!=null) {
+	        		paymentTransaction.setStatus("NACK");
+	        		service.updatePaymentRequest(paymentTransaction, messageId);
+	        	}
 	        }
 	        
 		}else {
 			logger.error("Message Id missing in Request. Unable to process message");
 		}
-        
         
     }
 
