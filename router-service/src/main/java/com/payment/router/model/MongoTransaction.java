@@ -1,33 +1,33 @@
 package com.payment.router.model;
 
-import java.nio.ByteBuffer;
-import java.sql.Blob;
 import java.util.UUID;
 
-import org.springframework.data.cassandra.core.mapping.PrimaryKey;
-import org.springframework.data.cassandra.core.mapping.Table;
+import org.springframework.context.annotation.Profile;
+import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.mapping.Document;
 
-@Table
-public class PaymentTransaction {
+@Document
+@Profile("mongo")
+public class MongoTransaction implements Transaction {
 	
-	@PrimaryKey
+	@Id
 	private UUID id;
 	
-	private String  messageId;
+	private String messageId;
 	
 	private String transactionId;
 	
 	private String status;
 	
-	private ByteBuffer  requestxml;
+	private String requestxml;
 	
-	private ByteBuffer  responsexml;
+	private String responsexml;
 	
-	public PaymentTransaction() {
-		
+	public MongoTransaction() {
+		super();
 	}
 
-	public PaymentTransaction(UUID id, String messageId, String transactionId, String status,ByteBuffer requestxml) {
+	public MongoTransaction(UUID id,String messageId, String transactionId, String status, String requestxml) {
 		super();
 		this.id = id;
 		this.messageId = messageId;
@@ -67,26 +67,26 @@ public class PaymentTransaction {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	
-	public ByteBuffer getRequestxml() {
+
+	public String getRequestxml() {
 		return requestxml;
 	}
 
-	public void setRequestxml(ByteBuffer requestxml) {
+	public void setRequestxml(String requestxml) {
 		this.requestxml = requestxml;
 	}
 
-	public ByteBuffer getResponsexml() {
+	public String getResponsexml() {
 		return responsexml;
 	}
 
-	public void setResponsexml(ByteBuffer responsexml) {
+	public void setResponsexml(String responsexml) {
 		this.responsexml = responsexml;
 	}
 
 	@Override
 	public String toString() {
-		return "PaymentTransaction [id=" + id + ", messageId=" + messageId + ", transactionId=" + transactionId
+		return "MongoTransaction [id=" + id + ", messageId=" + messageId + ", transactionId=" + transactionId
 				+ ", status=" + status + "]";
 	}
 

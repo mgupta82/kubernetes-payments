@@ -1,86 +1,31 @@
 package com.payment.router.model;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.util.UUID;
 
-@Document
-public class Transaction {
+public interface Transaction {
 	
-	@Id
-	private int id;
-	
-	private String messageId;
-	
-	private String transactionId;
-	
-	private String status;
-	
-	private String requestxml;
-	
-	private String responsexml;
-	
-	public Transaction() {
-		super();
-	}
+	public UUID getId() ;
 
-	public Transaction(String messageId, String transactionId, String status, String requestxml) {
-		super();
-		this.messageId = messageId;
-		this.transactionId = transactionId;
-		this.status = status;
-		this.requestxml = requestxml;
-	}
+	public void setId(UUID id);
 
-	public int getId() {
-		return id;
-	}
+	public String getMessageId();
 
-	public void setId(int id) {
-		this.id = id;
-	}
+	public void setMessageId(String messageId);
 
-	public String getMessageId() {
-		return messageId;
-	}
+	public String getTransactionId();
 
-	public void setMessageId(String messageId) {
-		this.messageId = messageId;
-	}
+	public void setTransactionId(String transactionId);
 
-	public String getTransactionId() {
-		return transactionId;
-	}
+	public String getStatus();
 
-	public void setTransactionId(String transactionId) {
-		this.transactionId = transactionId;
-	}
+	public void setStatus(String status);
 
-	public String getStatus() {
-		return status;
-	}
+	public String getRequestxml();
 
-	public void setStatus(String status) {
-		this.status = status;
-	}
+	public void setRequestxml(String requestxml);
 
-	public String getRequestxml() {
-		return requestxml;
-	}
+	public String getResponsexml();
 
-	public void setRequestxml(String requestxml) {
-		this.requestxml = requestxml;
-	}
-
-	public String getResponsexml() {
-		return responsexml;
-	}
-
-	public void setResponsexml(String responsexml) {
-		this.responsexml = responsexml;
-	}
-	
-	
-	
-	
+	public void setResponsexml(String responsexml);
 
 }

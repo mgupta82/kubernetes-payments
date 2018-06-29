@@ -4,7 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import com.payment.router.model.PaymentTransaction;
+import com.payment.router.model.Transaction;
 
 
 @Service
@@ -16,7 +16,7 @@ public class OrchestrationService {
 	ResponseService responseService;	
 	
 	@Autowired
-	PaymentTransactionService paymentTransactionService;	
+	TransactionService transactionService;
 	
 	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request) {
 		
@@ -32,10 +32,10 @@ public class OrchestrationService {
 			return;
 		}
 		
-		PaymentTransaction paymentTransaction = null;
+		Transaction transaction = null;
 		try {
 			//Save Request XML 
-			paymentTransaction = paymentTransactionService.insertPaymentRequest(request, messageId,extractTransactionId(request));
+			transaction = transactionService.insertPaymentRequest(request, messageId,extractTransactionId(request));
 			
 			//TODO : Step 1: Call Transformation Service
 			
@@ -54,11 +54,11 @@ public class OrchestrationService {
 			//TODO : Step 8: Audit Service for Core
 			
 			//Send positive ACK
-			responseService.sendAck(request, messageId,paymentTransaction);			
+			responseService.sendAck(request, messageId,transaction);			
 			logger.info("Message Processed Successfully :" + messageId);			
 		}catch(Exception ex) {
         	logger.error("Failed to Process Message "+messageId, ex);
-        	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,paymentTransaction);		
+        	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,transaction);		
 		}
 	}
 	
@@ -101,12 +101,12 @@ public class OrchestrationService {
 	public boolean processIfDuplicateRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId) {
 		logger.info("Checking duplicate request  : "+messageId);
 		try {
-			PaymentTransaction paymentTransaction = paymentTransactionService.findExistingRequest(messageId, extractTransactionId(request));
-			if(paymentTransaction != null) {
+			Transaction transaction = transactionService.findExistingRequest(messageId, extractTransactionId(request));
+			if(transaction != null) {
 	    		logger.info("Duplicate Request Received "+messageId);
-	    		if(paymentTransaction.getStatus().equals("ACK") 
-	    				|| paymentTransaction.getStatus().equals("NACK")) {
-	    			responseService.playbackResponse(paymentTransaction, messageId);
+	    		if(transaction.getStatus().equals("ACK") 
+	    				|| transaction.getStatus().equals("NACK")) {
+	    			responseService.playbackResponse(transaction, messageId);
 	    		}
 	    		return true;
 			}

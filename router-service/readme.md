@@ -8,3 +8,10 @@ Biogenetics-Crops, Glasgow, subsidiary of Biogenetics HQ, London, has received a
 the account of Seed Inc. 46373892034013 held at BBBB Bank, Dublin (BBBBIE2D). Transaction charges for the payment are shared between Biogenetics and Seed Inc.
 
 The payment of all Biogenetics invoices is centralised at Biogenetics HQ. It assigns reference CROPS/SX-25T/2015-10-13 to the payment order and passes it on to AAAA Bank (AAAAGB2L) where it holds the account 46373892034012. AAAA Bank sends the payment to its correspondent BBBB Bank in Dublin (BBBBIE2D).
+
+Peformance
+===========
+Test the performance against MongoDB and Cassandra DB by running with specific profile
+-Dspring.profiles.active=mongo / cassandra
+
+XML Parsing - SAX vs DOM

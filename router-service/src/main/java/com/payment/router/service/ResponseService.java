@@ -1,7 +1,5 @@
 package com.payment.router.service;
 
-import java.io.UnsupportedEncodingException;
-import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -16,7 +14,7 @@ import org.springframework.stereotype.Service;
 
 import com.payment.router.jms.MessageProducer;
 import com.payment.router.mapper.DocumentMapper;
-import com.payment.router.model.PaymentTransaction;
+import com.payment.router.model.Transaction;
 
 import iso.std.iso._20022.tech.xsd.pacs_002_001.Document;
 import iso.std.iso._20022.tech.xsd.pacs_002_001.FIToFIPaymentStatusReportV09;
@@ -38,7 +36,7 @@ public class ResponseService {
 	MessageProducer messageProducer;
 	
 	@Autowired
-	PaymentTransactionService paymentTransactionService;	
+	TransactionService transactionService;
 	
 	@Autowired
 	DocumentMapper documentMapper;	
@@ -50,18 +48,9 @@ public class ResponseService {
 	public ResponseService() {
 		documentMapper = Mappers.getMapper(DocumentMapper.class);
 	}
-	
-	private String byteToString(ByteBuffer request ) throws UnsupportedEncodingException {
-		byte[] data = new byte[request.remaining()];
-		return new String(request.get(data).array());
-	}	
-	
-	private ByteBuffer stringToByte(String input)  {
-		return ByteBuffer.wrap(input.getBytes());
-	}		
-	
+
 	private String generateMessageId(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
-		//HACK for POC
+		//hack for POC
 		StringBuffer id  = new StringBuffer(bankName);
 		id.append("/").append(new Date().getTime());
 		return id.toString();
@@ -165,7 +154,7 @@ public class ResponseService {
 		messageProducer.send(document);
 	}
 	
-	private void processPlayback(PaymentTransaction paymentTransaction) {
+	private void processPlayback(Transaction transaction) {
 		
 		//messageProducer.send(paymentTransaction.getResponse());
 		
@@ -179,15 +168,15 @@ public class ResponseService {
 	 * @param errorCode
 	 * @param paymentTransaction
 	 */
-	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,ErrorCode errorCode,PaymentTransaction paymentTransaction) {
+	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,ErrorCode errorCode,Transaction transaction) {
 		logger.info("Sending NACK for : "+messageId);
 		try {
 			processFailure(request, messageId, errorCode);
 			logger.info("NACK sent successfully  : "+messageId);
-        	if(paymentTransaction!=null) {
-        		paymentTransaction.setStatus("NACK");
-        		paymentTransaction.setResponsexml(stringToByte("<nack></nack>"));
-        		paymentTransactionService.updatePaymentRequest(paymentTransaction, messageId);
+        	if(transaction!=null) {
+        		transaction.setStatus("NACK");
+        		transaction.setResponsexml("<nack></nack>");
+        		transactionService.updatePaymentRequest(transaction, messageId);
         	}			
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to Send NACK . Please reconcile manually : "+ex);
@@ -201,14 +190,14 @@ public class ResponseService {
 	 * @param messageId
 	 * @param paymentTransaction
 	 */
-	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,PaymentTransaction paymentTransaction) {
+	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,Transaction transaction) {
 		logger.info("Sending ACK for : "+messageId);
 		try {
 			processSuccess(request, messageId);
 			logger.info("ACK sent successfully  : "+messageId);
-			paymentTransaction.setStatus("ACK");
-			paymentTransaction.setResponsexml(stringToByte("<ack></ack>"));
-			paymentTransactionService.updatePaymentRequest(paymentTransaction, messageId);			
+			transaction.setStatus("ACK");
+			transaction.setResponsexml("<ack></ack>");
+			transactionService.updatePaymentRequest(transaction, messageId);			
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to Send ACK. Please reconcile manually : "+ex);
 		}
@@ -219,11 +208,11 @@ public class ResponseService {
 	 * @param paymentTransaction
 	 * @param messageId
 	 */
-	public void playbackResponse(PaymentTransaction paymentTransaction,String messageId) {
+	public void playbackResponse(Transaction transaction,String messageId) {
 		logger.info("Playing back response : "+messageId);
 		try {
-			logger.info("responsexml: "+messageId + ":"+byteToString(paymentTransaction.getResponsexml()));
-			processPlayback(paymentTransaction);
+			logger.info("responsexml: "+messageId + ":"+transaction.getResponsexml());
+			processPlayback(transaction);
 			logger.info("Response played back for  : "+messageId);
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to play back response : "+ex);
