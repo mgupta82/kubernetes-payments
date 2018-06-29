@@ -36,5 +36,13 @@ public class OrchestrationService {
 		//TODO : Step 8: Audit Service for Core
 		
 	}
+	
+	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) {
+		try {
+			coreService.processFailure(input, messageId, errorCode);
+		}catch(Exception ex) {
+			logger.error("Savere Error : Failed to Send NACK : "+ex);
+		}
+	}
 
 }

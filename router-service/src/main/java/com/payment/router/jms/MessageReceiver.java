@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
 import org.springframework.stereotype.Component;
+
+import com.payment.router.service.CoreService;
+import com.payment.router.service.ErrorCode;
 import com.payment.router.service.OrchestrationService;
 import iso.std.iso._20022.tech.xsd.pacs_008_001.Document;
 
@@ -38,6 +41,7 @@ public class MessageReceiver {
 	        }catch(Exception ex) {
 	        	logger.error("Failed to Process Message "+messageId, ex);
 	        	//TODO : Send and Save Failure Response XML pay load in Database
+	        	service.sendNack(inputDocument, messageId, ErrorCode.GENERIC_ERROR);
 	        }
 		}else {
 			logger.error("Message Id missing in Request. Unable to process message");

@@ -21,6 +21,8 @@ import iso.std.iso._20022.tech.xsd.pacs_002_001.OriginalGroupHeader13;
 import iso.std.iso._20022.tech.xsd.pacs_002_001.OriginalTransactionReference27;
 import iso.std.iso._20022.tech.xsd.pacs_002_001.Party35Choice;
 import iso.std.iso._20022.tech.xsd.pacs_002_001.PaymentTransaction91;
+import iso.std.iso._20022.tech.xsd.pacs_002_001.StatusReason6Choice;
+import iso.std.iso._20022.tech.xsd.pacs_002_001.StatusReasonInformation11;
 
 @Service
 public class CoreService {
@@ -47,7 +49,7 @@ public class CoreService {
 		
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
+	private Document generatePlaybackResponse(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,boolean isSuccess) throws DatatypeConfigurationException {
 		Document document = objectFactory.createDocument();
 		
 		FIToFIPaymentStatusReportV09 paymentStatusReport = objectFactory.createFIToFIPaymentStatusReportV09();
@@ -71,10 +73,17 @@ public class CoreService {
 		
 		PaymentTransaction91 paymentTransaction = objectFactory.createPaymentTransaction91();
 		paymentStatusReport.getTxInfAndSts().add(paymentTransaction);
-		paymentTransaction.setStsId("success");
+		if(isSuccess)
+			paymentTransaction.setStsId("success");
+		else
+			paymentTransaction.setStsId("failure");
+		
 		paymentTransaction.setOrgnlEndToEndId(input.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getPmtId().getEndToEndId());
 		paymentTransaction.setOrgnlTxId(input.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getPmtId().getTxId());
-		paymentTransaction.setTxSts("SUCS");
+		if(isSuccess)
+			paymentTransaction.setTxSts("SUCS");
+		else
+			paymentTransaction.setTxSts("RJCT");
 		OriginalTransactionReference27 originalTransactionReference = objectFactory.createOriginalTransactionReference27();
 		paymentTransaction.setOrgnlTxRef(originalTransactionReference);
 		originalTransactionReference.setIntrBkSttlmAmt(documentMapper.convert(input.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getIntrBkSttlmAmt()));
@@ -87,9 +96,55 @@ public class CoreService {
 		
 		Party35Choice cdtr = objectFactory.createParty35Choice();
 		originalTransactionReference.setCdtr(cdtr);
-		cdtr.setPty(documentMapper.convert(input.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getCdtr()));
+		cdtr.setPty(documentMapper.convert(input.getFIToFICstmrCdtTrf().getCdtTrfTxInf().get(0).getCdtr()));		
 		
+		return document;
+	}
+	
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
+		Document document = generatePlaybackResponse(input,messageId,true);	
 		messageProducer.send(document);
+	}
+	
+	public void processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
+		
+		Document document = generatePlaybackResponse(input,messageId,false);	
+		
+		PaymentTransaction91 paymentTransaction = document.getFIToFIPmtStsRpt().getTxInfAndSts().get(0);
+		
+		StatusReasonInformation11 statusReasonInfo = objectFactory.createStatusReasonInformation11();
+		paymentTransaction.getStsRsnInf().add(statusReasonInfo);
+		
+		StatusReason6Choice reason = objectFactory.createStatusReason6Choice();
+		statusReasonInfo.setRsn(reason);
+		
+		reason.setCd(errorCode.getReasonCode());
+		
+		//TODO : Any Special handling for each case
+		switch(errorCode){
+		
+			case PERSISTENCE_ERROR : 
+								break;
+								
+			case PARSING_ERROR : 
+								break;
+				
+			case INVALID_BSB : 
+								break;
+				
+			case INVALID_AMOUNT : 
+								break;
+				
+			case DUPLICATE_REQUEST : 
+								break;
+				
+			default : 
+								break;				
+								
+		}
+		
+		messageProducer.send(document);		
+		
 	}
 
 }

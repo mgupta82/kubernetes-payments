@@ -1,0 +1,138 @@
+<Document xmlns="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.09" xsi:schemaLocation="urn:iso:std:iso:20022:tech:xsd:pacs.002.001.09 pacs.002.001.09.xsd"
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+
+<FIToFIPmtStsRpt>
+
+	<GrpHdr>
+
+		<MsgId>BBBB/151109-CCT/AUD/443</MsgId>
+
+		<CreDtTm>2015-06-29T09:56:00</CreDtTm>
+
+		<InstgAgt>
+
+			<FinInstnId>
+
+				<BICFI>BBBBIE2D</BICFI>
+
+			</FinInstnId>
+
+		</InstgAgt>
+
+		<InstdAgt>
+
+			<FinInstnId>
+
+				<BICFI>AAAAGB2L</BICFI>
+
+			</FinInstnId>
+
+		</InstdAgt>
+
+	</GrpHdr>
+
+	<OrgnlGrpInfAndSts>
+
+		<OrgnlMsgId>AAAA/151109-CCT/AUD/443</OrgnlMsgId>
+
+		<OrgnlMsgNmId>pacs.008.001.07</OrgnlMsgNmId>
+
+		<OrgnlCreDtTm>2015-11-09T10:09:13</OrgnlCreDtTm>
+
+	</OrgnlGrpInfAndSts>
+
+	<TxInfAndSts>
+
+		<StsId>FAILURE</StsId>
+
+		<OrgnlEndToEndId>CROPS/SX-25T/2015-10-13</OrgnlEndToEndId>
+
+		<OrgnlTxId>AAAA/151109-CCT/AUD/443/1</OrgnlTxId>
+
+		<TxSts>RJCT</TxSts>
+		
+		<StsRsnInf>
+
+			<Orgtr>
+
+				<Id>
+
+					<OrgId>
+
+						<AnyBIC>ABABUS23</AnyBIC>
+
+					</OrgId>
+
+				</Id>
+
+			</Orgtr>
+
+			<Rsn>
+
+				<Cd>AM05</Cd>
+
+			</Rsn>
+
+		</StsRsnInf>		
+
+		<OrgnlTxRef>
+
+			<IntrBkSttlmAmt Ccy="AUD">75000</IntrBkSttlmAmt>
+
+			<IntrBkSttlmDt>2015-11-09</IntrBkSttlmDt>
+
+			<ReqdColltnDt>2015-11-09</ReqdColltnDt>
+
+			<Dbtr>
+
+				<Pty>
+
+					<Nm>Biogenetics - HQ</Nm>
+
+					<PstlAdr>
+
+						<StrtNm>Corn Street</StrtNm>
+
+						<BldgNb>13</BldgNb>
+
+						<PstCd>W6 8DR</PstCd>
+
+						<TwnNm>London</TwnNm>
+
+						<Ctry>GB</Ctry>
+
+					</PstlAdr>
+
+				</Pty>
+
+			</Dbtr>
+
+			<Cdtr>
+
+				<Pty>
+
+					<Nm>Seed Inc.</Nm>
+
+					<PstlAdr>
+
+						<StrtNm>Grain Lane</StrtNm>
+
+						<BldgNb>27</BldgNb>
+
+						<TwnNm>Dublin</TwnNm>
+
+						<Ctry>IE</Ctry>
+
+					</PstlAdr>
+
+				</Pty>
+
+			</Cdtr>
+
+		</OrgnlTxRef>
+
+	</TxInfAndSts>
+
+</FIToFIPmtStsRpt>
+
+</Document>
