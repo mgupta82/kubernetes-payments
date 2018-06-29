@@ -8,4 +8,6 @@ import com.payment.router.model.Transaction;
 @Repository
 public interface TransactionRepository extends MongoRepository<Transaction, Integer> {
 	
+	public Transaction findByMessageId(String messageId);
+	
 }
