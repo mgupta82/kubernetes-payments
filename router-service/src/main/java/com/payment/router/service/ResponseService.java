@@ -1,5 +1,7 @@
 package com.payment.router.service;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -7,6 +9,8 @@ import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeFactory;
 
 import org.mapstruct.factory.Mappers;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,21 +30,35 @@ import iso.std.iso._20022.tech.xsd.pacs_002_001.StatusReason6Choice;
 import iso.std.iso._20022.tech.xsd.pacs_002_001.StatusReasonInformation11;
 
 @Service
-public class CoreService {
+public class ResponseService {
+	
+	private static final Logger logger = LoggerFactory.getLogger(ResponseService.class);
 	
 	@Autowired
 	MessageProducer messageProducer;
 	
-	ObjectFactory objectFactory = new ObjectFactory();
+	@Autowired
+	PaymentTransactionService paymentTransactionService;	
 	
 	@Autowired
-	DocumentMapper documentMapper;
+	DocumentMapper documentMapper;	
 	
-	private final String bankName = "BBBB";
+	ObjectFactory objectFactory = new ObjectFactory();
 	
-	public CoreService() {
+	private final static String bankName = "BBBB";
+	
+	public ResponseService() {
 		documentMapper = Mappers.getMapper(DocumentMapper.class);
 	}
+	
+	private String byteToString(ByteBuffer request ) throws UnsupportedEncodingException {
+		byte[] data = new byte[request.remaining()];
+		return new String(request.get(data).array());
+	}	
+	
+	private ByteBuffer stringToByte(String input)  {
+		return ByteBuffer.wrap(input.getBytes());
+	}		
 	
 	private String generateMessageId(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
 		//HACK for POC
@@ -102,13 +120,12 @@ public class CoreService {
 		return document;
 	}
 	
-	public Document process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
+	private void processSuccess(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
 		Document document = generatePlaybackResponse(input,messageId,true);	
 		messageProducer.send(document);
-		return document;
 	}
 	
-	public Document processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
+	private void processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
 		
 		Document document = generatePlaybackResponse(input,messageId,false);	
 		
@@ -145,15 +162,72 @@ public class CoreService {
 								
 		}
 		
-		messageProducer.send(document);		
-		return document;
-		
+		messageProducer.send(document);
 	}
 	
-	public void playbackResponse(PaymentTransaction paymentTransaction) {
+	private void processPlayback(PaymentTransaction paymentTransaction) {
 		
 		//messageProducer.send(paymentTransaction.getResponse());
 		
 	}
+	
+	
+	/**
+	 * 
+	 * @param request
+	 * @param messageId
+	 * @param errorCode
+	 * @param paymentTransaction
+	 */
+	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,ErrorCode errorCode,PaymentTransaction paymentTransaction) {
+		logger.info("Sending NACK for : "+messageId);
+		try {
+			processFailure(request, messageId, errorCode);
+			logger.info("NACK sent successfully  : "+messageId);
+        	if(paymentTransaction!=null) {
+        		paymentTransaction.setStatus("NACK");
+        		paymentTransaction.setResponsexml(stringToByte("<nack></nack>"));
+        		paymentTransactionService.updatePaymentRequest(paymentTransaction, messageId);
+        	}			
+		}catch(Exception ex) {
+			logger.error("Severe Error : Failed to Send NACK . Please reconcile manually : "+ex);
+		}
+
+	}
+	
+	/**
+	 * 
+	 * @param request
+	 * @param messageId
+	 * @param paymentTransaction
+	 */
+	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,PaymentTransaction paymentTransaction) {
+		logger.info("Sending ACK for : "+messageId);
+		try {
+			processSuccess(request, messageId);
+			logger.info("ACK sent successfully  : "+messageId);
+			paymentTransaction.setStatus("ACK");
+			paymentTransaction.setResponsexml(stringToByte("<ack></ack>"));
+			paymentTransactionService.updatePaymentRequest(paymentTransaction, messageId);			
+		}catch(Exception ex) {
+			logger.error("Severe Error : Failed to Send ACK. Please reconcile manually : "+ex);
+		}
+	}
+	
+	/**
+	 * 
+	 * @param paymentTransaction
+	 * @param messageId
+	 */
+	public void playbackResponse(PaymentTransaction paymentTransaction,String messageId) {
+		logger.info("Playing back response : "+messageId);
+		try {
+			logger.info("responsexml: "+messageId + ":"+byteToString(paymentTransaction.getResponsexml()));
+			processPlayback(paymentTransaction);
+			logger.info("Response played back for  : "+messageId);
+		}catch(Exception ex) {
+			logger.error("Severe Error : Failed to play back response : "+ex);
+		}		
+	}	
 
 }
