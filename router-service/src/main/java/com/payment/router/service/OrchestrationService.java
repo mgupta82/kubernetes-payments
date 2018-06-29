@@ -3,8 +3,6 @@ package com.payment.router.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.oxm.Marshaller;
-import org.springframework.oxm.Unmarshaller;
 import org.springframework.stereotype.Service;
 import com.payment.router.model.PaymentTransaction;
 
@@ -108,7 +106,6 @@ public class OrchestrationService {
 	    		logger.info("Duplicate Request Received "+messageId);
 	    		if(paymentTransaction.getStatus().equals("ACK") 
 	    				|| paymentTransaction.getStatus().equals("NACK")) {
-	    			//logger.info("responsexml: "+messageId + ":"+byteToString(paymentTransaction.getResponsexml()));
 	    			responseService.playbackResponse(paymentTransaction, messageId);
 	    		}
 	    		return true;
