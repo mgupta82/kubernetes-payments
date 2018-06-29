@@ -20,12 +20,19 @@ public class MessageReceiver {
 	private static final Logger logger = LoggerFactory.getLogger(MessageReceiver.class);
 	
 	@Autowired
-	OrchestrationService service;	
+	OrchestrationService service;
 	
 	@JmsListener(destination = "pacs.008.001.07.request.queue", containerFactory = "myFactory")
     public void receiveMessage(Document request) throws XmlMappingException, IOException {
 		logger.info("Message Received :" + request);
 		service.process(request);
     }
+	
+/*	@JmsListener(destination = "pacs.008.001.07.request.queue")
+    public void receiveMessage(String requestxml) throws XmlMappingException, IOException {
+		logger.info("Message Received :" + requestxml);
+		service.process(requestxml);
+    }*/
+	
 
 }

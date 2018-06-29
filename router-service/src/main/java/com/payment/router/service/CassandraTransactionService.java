@@ -26,10 +26,10 @@ public class CassandraTransactionService implements TransactionService {
 	 * @param messageId
 	 * @return
 	 */
-	public Transaction insertPaymentRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,String transactionId)  {
+	public Transaction insertPaymentRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,String transactionId,String requestxml)  {
 		logger.info("Inserting Payment Request  : "+messageId);
 		//TODO Save Actual request
-		CassandraTransaction paymentTransaction = repository.save(new CassandraTransaction(UUIDs.timeBased(), messageId,transactionId , "INIT","<request></request>"));
+		CassandraTransaction paymentTransaction = repository.save(new CassandraTransaction(UUIDs.timeBased(), messageId,transactionId , "INIT",requestxml));
 		logger.info("Payment Request Inserted Successfully  : "+messageId+ ":"+paymentTransaction.getId());
 		return paymentTransaction;
 	}

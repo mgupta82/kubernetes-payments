@@ -18,7 +18,25 @@ public class OrchestrationService {
 	@Autowired
 	TransactionService transactionService;
 	
+	@Autowired
+	MarshallingService marshallingService;
+	
+	public void process(String requestxml) {
+		iso.std.iso._20022.tech.xsd.pacs_008_001.Document request = parseXml(requestxml);
+		if(request!=null) {
+			process(request,requestxml);
+		}
+	}
+	
 	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request) {
+		String requestxml = parseObject(request);
+		if(requestxml!=null) {
+			process(request,requestxml);
+		}
+		
+	}
+	
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String requestXml) {
 		
 		//Extract Message ID
 		String messageId = extractMessageId(request);
@@ -35,7 +53,7 @@ public class OrchestrationService {
 		Transaction transaction = null;
 		try {
 			//Save Request XML 
-			transaction = transactionService.insertPaymentRequest(request, messageId,extractTransactionId(request));
+			transaction = transactionService.insertPaymentRequest(request, messageId,extractTransactionId(request),requestXml);
 			
 			//TODO : Step 1: Call Transformation Service
 			
@@ -61,6 +79,28 @@ public class OrchestrationService {
         	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,transaction);		
 		}
 	}
+	
+	private iso.std.iso._20022.tech.xsd.pacs_008_001.Document parseXml(String requestxml) {
+		try {
+			iso.std.iso._20022.tech.xsd.pacs_008_001.Document request = marshallingService.unmarshallXml(requestxml);
+			logger.info("XML parsed Successfully " + request);
+			return request;
+		} catch (Exception e) {
+			logger.error("Invalid XML format. Unable to process message ", e);
+		}
+		return null;
+	}
+	
+	private String parseObject(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request) {
+		try {
+			String requestXml = marshallingService.marshallXml(request);
+			logger.info("Object parsed Successfully " + request);
+			return requestXml;
+		} catch (Exception e) {
+			logger.error("Invalid Object format. Unable to process message ", e);
+		}
+		return null;
+	}	
 	
 	/**
 	 * Extract Message Id from the Request XML

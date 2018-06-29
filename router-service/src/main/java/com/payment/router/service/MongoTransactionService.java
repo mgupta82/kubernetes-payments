@@ -20,9 +20,9 @@ public class MongoTransactionService implements TransactionService {
 	@Autowired
 	MongoTransactionRepository repository;
 	
-	public Transaction insertPaymentRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,String transactionId)  {
+	public Transaction insertPaymentRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,String transactionId,String requestxml)  {
 		logger.info("Inserting Transaction Request  : "+messageId);
-		MongoTransaction transaction = repository.save(new MongoTransaction(UUIDs.timeBased(),messageId, transactionId, "INIT", "<request></request>"));
+		MongoTransaction transaction = repository.save(new MongoTransaction(UUIDs.timeBased(),messageId, transactionId, "INIT", requestxml));
 		logger.info("Transaction Inserted Successfully  : "+messageId+ ":"+transaction.getId());
 		return transaction;
 	}

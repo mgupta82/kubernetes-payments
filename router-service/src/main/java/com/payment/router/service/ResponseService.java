@@ -1,5 +1,6 @@
 package com.payment.router.service;
 
+import java.io.IOException;
 import java.util.Date;
 import java.util.GregorianCalendar;
 
@@ -10,6 +11,7 @@ import org.mapstruct.factory.Mappers;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.oxm.XmlMappingException;
 import org.springframework.stereotype.Service;
 
 import com.payment.router.jms.MessageProducer;
@@ -37,6 +39,9 @@ public class ResponseService {
 	
 	@Autowired
 	TransactionService transactionService;
+	
+	@Autowired
+	MarshallingService marshallingService;	
 	
 	@Autowired
 	DocumentMapper documentMapper;	
@@ -109,12 +114,13 @@ public class ResponseService {
 		return document;
 	}
 	
-	private void processSuccess(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
+	private Document processSuccess(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
 		Document document = generatePlaybackResponse(input,messageId,true);	
 		messageProducer.send(document);
+		return document;
 	}
 	
-	private void processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
+	private Document processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
 		
 		Document document = generatePlaybackResponse(input,messageId,false);	
 		
@@ -152,12 +158,11 @@ public class ResponseService {
 		}
 		
 		messageProducer.send(document);
+		return document;
 	}
 	
-	private void processPlayback(Transaction transaction) {
-		
-		//messageProducer.send(paymentTransaction.getResponse());
-		
+	private void processPlayback(Transaction transaction) throws XmlMappingException, IOException {
+		messageProducer.send(marshallingService.unmarshallXml(transaction.getResponsexml()));	
 	}
 	
 	
@@ -171,11 +176,11 @@ public class ResponseService {
 	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,ErrorCode errorCode,Transaction transaction) {
 		logger.info("Sending NACK for : "+messageId);
 		try {
-			processFailure(request, messageId, errorCode);
+			Document response = processFailure(request, messageId, errorCode);
 			logger.info("NACK sent successfully  : "+messageId);
         	if(transaction!=null) {
         		transaction.setStatus("NACK");
-        		transaction.setResponsexml("<nack></nack>");
+        		transaction.setResponsexml(marshallingService.marshallXml(response));
         		transactionService.updatePaymentRequest(transaction, messageId);
         	}			
 		}catch(Exception ex) {
@@ -193,10 +198,10 @@ public class ResponseService {
 	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,Transaction transaction) {
 		logger.info("Sending ACK for : "+messageId);
 		try {
-			processSuccess(request, messageId);
+			Document response = processSuccess(request, messageId);
 			logger.info("ACK sent successfully  : "+messageId);
 			transaction.setStatus("ACK");
-			transaction.setResponsexml("<ack></ack>");
+			transaction.setResponsexml(marshallingService.marshallXml(response));
 			transactionService.updatePaymentRequest(transaction, messageId);			
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to Send ACK. Please reconcile manually : "+ex);

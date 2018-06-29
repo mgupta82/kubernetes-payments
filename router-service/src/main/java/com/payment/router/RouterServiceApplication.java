@@ -34,24 +34,18 @@ public class RouterServiceApplication {
 		return marshaller;
 	}
 	
-	@Bean
-	public Unmarshaller unmarshaller() {
-		Class<?>[] classesToBeBound = new Class<?>[] {Document.class,iso.std.iso._20022.tech.xsd.pacs_002_001.Document.class};
-		Jaxb2Marshaller marshaller = new Jaxb2Marshaller();
-		marshaller.setClassesToBeBound(classesToBeBound);
-		return marshaller;
-	}	
-
+	
     @Bean // Serialize message content to xml/json using TextMessage
     public MessageConverter messageConverter() {
     	MarshallingMessageConverter converter = new MarshallingMessageConverter();
         //MappingJackson2MessageConverter converter = new MappingJackson2MessageConverter();
         converter.setTargetType(MessageType.TEXT);
         converter.setMarshaller(marshaller());
-        converter.setUnmarshaller(unmarshaller());
+        converter.setUnmarshaller((Unmarshaller) marshaller());
         return converter;
     } 	
-	
+    
+    
     @Bean
     public JmsListenerContainerFactory<?> myFactory(ConnectionFactory connectionFactory,
                                                     DefaultJmsListenerContainerFactoryConfigurer configurer) {
