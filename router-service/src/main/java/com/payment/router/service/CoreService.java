@@ -33,11 +33,21 @@ public class CoreService {
 	@Autowired
 	DocumentMapper documentMapper;
 	
+	private final String bankName = "BBBB";
+	
 	public CoreService() {
 		documentMapper = Mappers.getMapper(DocumentMapper.class);
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input) throws DatatypeConfigurationException {
+	private String generateMessageId(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
+		//HACK for POC
+		StringBuffer id  = new StringBuffer(bankName);
+		id.append("/").append(new Date().getTime());
+		return id.toString();
+		
+	}
+	
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
 		Document document = objectFactory.createDocument();
 		
 		FIToFIPaymentStatusReportV09 paymentStatusReport = objectFactory.createFIToFIPaymentStatusReportV09();
@@ -46,7 +56,7 @@ public class CoreService {
 		GroupHeader53 groupHeader = objectFactory.createGroupHeader53();
 		paymentStatusReport.setGrpHdr(groupHeader);
 		
-		groupHeader.setMsgId("BBB");
+		groupHeader.setMsgId(generateMessageId(input,messageId));
 		GregorianCalendar c = new GregorianCalendar();
 		c.setTime(new Date());
 		groupHeader.setCreDtTm(DatatypeFactory.newInstance().newXMLGregorianCalendar(c));

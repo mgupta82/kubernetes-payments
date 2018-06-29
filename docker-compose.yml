@@ -7,7 +7,6 @@ active-mq:
   - 61613:61613
   - 1883:1883
   - 61614:61614
-  net : "host"
   
 router-db:
   image: mongo

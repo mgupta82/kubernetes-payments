@@ -30,7 +30,7 @@ public class OrchestrationService {
 		
 		//TODO : Step 7: Call Core Service
 		logger.info("Calling Core Service for request message : "+messageId);
-		coreService.process(input);
+		coreService.process(input,messageId);
         logger.info("Core Response generated successfully for request message : "+messageId);
 		
 		//TODO : Step 8: Audit Service for Core
