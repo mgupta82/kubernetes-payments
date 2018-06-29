@@ -1,5 +1,8 @@
 package com.payment.router.service;
 
+import java.io.UnsupportedEncodingException;
+import java.nio.ByteBuffer;
+
 import org.slf4j.Logger;
 
 import org.slf4j.LoggerFactory;
@@ -9,6 +12,8 @@ import org.springframework.stereotype.Service;
 import com.datastax.driver.core.utils.UUIDs;
 import com.payment.router.dao.PaymentTransactionRepository;
 import com.payment.router.model.PaymentTransaction;
+
+import iso.std.iso._20022.tech.xsd.pacs_002_001.Document;
 
 @Service
 public class OrchestrationService {
@@ -41,24 +46,28 @@ public class OrchestrationService {
 		
 	}
 	
-	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) {
+	public Document sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) {
 		logger.info("Sending NACK for : "+messageId);
 		try {
-			coreService.processFailure(input, messageId, errorCode);
+			Document document = coreService.processFailure(input, messageId, errorCode);
 			logger.info("NACK sent successfully  : "+messageId);
+			return document;
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to Send NACK . Please reconcile manually : "+ex);
 		}
+		return null;
 	}
 	
-	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
+	public Document sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
 		logger.info("Sending ACK for : "+messageId);
 		try {
-			coreService.process(input, messageId);
+			Document document = coreService.process(input, messageId);
 			logger.info("ACK sent successfully  : "+messageId);
+			return document;
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to Send ACK. Please reconcile manually : "+ex);
 		}
+		return null;
 	}
 	
 	public void playbackResponse(PaymentTransaction paymentTransaction,String messageId) {
@@ -81,9 +90,13 @@ public class OrchestrationService {
 		return transactionId;
 	}
 	
-	public PaymentTransaction insertPaymentRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) {
+	private ByteBuffer stringToByte(String input)  {
+		return ByteBuffer.wrap(input.getBytes());
+	}	
+	
+	public PaymentTransaction insertPaymentRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId)  {
 		logger.info("Inserting Payment Request  : "+messageId);
-		PaymentTransaction paymentTransaction = repository.save(new PaymentTransaction(UUIDs.timeBased(), messageId,extractTransactionId(input) , "INIT"));
+		PaymentTransaction paymentTransaction = repository.save(new PaymentTransaction(UUIDs.timeBased(), messageId,extractTransactionId(input) , "INIT",stringToByte("<request></request>")));
 		logger.info("Payment Request Inserted Successfully  : "+messageId+ ":"+paymentTransaction.getId());
 		return paymentTransaction;
 	}

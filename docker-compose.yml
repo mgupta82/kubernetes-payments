@@ -12,11 +12,21 @@ router-db:
   image: mongo
   ports:
   - 27017:27017
+
+cassandra-db:
+  image: cassandra
+  ports:
+  - 9042:9042
+  - 7199:7199
+  - 9160:9160
+  - 7000:7000
+  - 7001:7001
  
 router-service:
   image: payment/router-service
   links:
   - router-db:routerdb
   - active-mq:activemq
+  - cassandra-db:cassandradb
   ports:
   - 8080:8080

@@ -102,12 +102,13 @@ public class CoreService {
 		return document;
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
+	public Document process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
 		Document document = generatePlaybackResponse(input,messageId,true);	
 		messageProducer.send(document);
+		return document;
 	}
 	
-	public void processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
+	public Document processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
 		
 		Document document = generatePlaybackResponse(input,messageId,false);	
 		
@@ -145,6 +146,7 @@ public class CoreService {
 		}
 		
 		messageProducer.send(document);		
+		return document;
 		
 	}
 	
