@@ -7,7 +7,6 @@ import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document
-@Profile("mongo")
 public class MongoTransaction implements Transaction {
 	
 	@Id
