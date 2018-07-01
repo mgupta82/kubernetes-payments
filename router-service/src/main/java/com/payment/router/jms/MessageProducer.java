@@ -22,7 +22,7 @@ public class MessageProducer {
 	
 	public void send(Document document) {
 		logger.info("Sending Message : "+ document.getFIToFIPmtStsRpt().getGrpHdr().getMsgId());
-		this.jmsTemplate.convertAndSend("pacs002.001.09.response.queue", document);	
+		this.jmsTemplate.convertAndSend("pacs.002.001.09.response.queue", document);	
 		logger.info("Message Sent : "+ document.getFIToFIPmtStsRpt().getGrpHdr().getMsgId());
 	}
 
