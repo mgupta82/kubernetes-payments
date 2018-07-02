@@ -3,7 +3,16 @@ package com.payment.router.service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
+import com.payment.router.errorhandler.ServiceErrorHandler;
 import com.payment.router.model.Transaction;
 
 
@@ -11,6 +20,21 @@ import com.payment.router.model.Transaction;
 public class OrchestrationService {
 	
 	private static final Logger logger = LoggerFactory.getLogger(OrchestrationService.class);
+	
+	@Value("${transformation.service.url}")
+	private String transformationUrl;
+	
+	@Value("${persistence.service.url}")
+	private String persistenceUrl;
+	
+	@Value("${validation.service.url}")
+	private String validationUrl;
+	
+	@Autowired
+	private ServiceErrorHandler errorHandler;
+	
+	@Autowired
+	RestTemplate restTemplate;
 	
 	@Autowired
 	ResponseService responseService;	
@@ -52,18 +76,26 @@ public class OrchestrationService {
 		
 		Transaction transaction = null;
 		try {
+			String response=null;
 			//Save Request XML 
 			transaction = transactionService.insertPaymentRequest(request, messageId,extractTransactionId(request),requestXml);
 			
 			//TODO : Step 1: Call Transformation Service
+			response=callInternalService(transformationUrl, requestXml,MediaType.APPLICATION_JSON);
 			
 			//TODO : Step 2: Audit Service for Transformation
 			
 			//TODO : Step 3: Call Persistence Service
 			
+			String perResponse=callInternalService(persistenceUrl, response,MediaType.APPLICATION_JSON);
+			System.out.println("Response :: "+response);
+			
 			//TODO : Step 4: Audit Service for Persistence
 			
 			//TODO : Step 5: Call Validation Service
+			
+			String valResponse=callInternalService(validationUrl, response,MediaType.APPLICATION_JSON);
+			System.out.println("Response :: "+response);
 			
 			//TODO : Step 6: Audit Service Validation 
 			
@@ -102,6 +134,24 @@ public class OrchestrationService {
 		return null;
 	}	
 	
+	
+	private HttpHeaders getHttpHeaders(MediaType mediaType) {
+		 HttpHeaders headers = new HttpHeaders();
+		 headers.setContentType(mediaType);
+		 return headers;
+	}
+	
+	
+	private String callInternalService(String url,String request, MediaType mediaType) {
+		HttpEntity<String> httpRequest = new HttpEntity<String>(request,getHttpHeaders(mediaType));
+		restTemplate.setErrorHandler(errorHandler);
+		ResponseEntity<String> response = restTemplate
+				  .exchange(url, HttpMethod.POST, httpRequest, String.class);
+		
+		System.out.println("Response :: "+response.getBody());
+		
+		return response.getBody();
+	}
 	/**
 	 * Extract Message Id from the Request XML
 	 * @param request
