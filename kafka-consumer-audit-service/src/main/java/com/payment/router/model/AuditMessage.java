@@ -1,18 +1,18 @@
-package com.hcl.kafka.auditserviceconsumer.model;
+package com.payment.router.model;
 
-public class AuditResponse {
+public class AuditMessage {
 
-	private Long id;
+	private String id;
 	private String service;
 	private String statusCode;
 	private String statusDesc;
 	private String timestamp;
 
-	public Long getId() {
+	public String getId() {
 		return id;
 	}
 
-	public void setId(Long id) {
+	public void setId(String id) {
 		this.id = id;
 	}
 
@@ -48,10 +48,10 @@ public class AuditResponse {
 		this.timestamp = timestamp;
 	}
 
-	public AuditResponse() {
+	public AuditMessage() {
 	}
 
-	public AuditResponse(Long id, String service, String statusCode,
+	public AuditMessage(String id, String service, String statusCode,
 			String statusDesc, String timestamp) {
 		super();
 
