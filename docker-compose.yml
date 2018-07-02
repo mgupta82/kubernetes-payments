@@ -14,6 +14,15 @@ router-db:
   image: mongo
   ports:
   - 27017:27017
+
+persistence-db:
+  image: mysql:5.7
+  restart: always
+  ports: 
+  - 3306:3306
+  environment:
+  - MYSQL_ROOT_PASSWORD=sourav
+  - MYSQL_DATABASE=projectdb 
  
 router-service:
   image: payment/router-service
