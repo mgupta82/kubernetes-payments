@@ -9,9 +9,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.payment.router.model.AuditMessage;
 import com.payment.router.errorhandler.ServiceErrorHandler;
 import com.payment.router.model.Transaction;
 
@@ -45,6 +47,11 @@ public class OrchestrationService {
 	@Autowired
 	MarshallingService marshallingService;
 	
+	private static final String TOPIC = "audit_test";
+	@Autowired
+    private KafkaTemplate<String, AuditMessage> kafkaTemplate;
+
+	
 	public void process(String requestxml) {
 		iso.std.iso._20022.tech.xsd.pacs_008_001.Document request = parseXml(requestxml);
 		if(request!=null) {
@@ -76,26 +83,28 @@ public class OrchestrationService {
 		
 		Transaction transaction = null;
 		try {
-			String response=null;
+			String response= null;
 			//Save Request XML 
 			transaction = transactionService.insertPaymentRequest(request, messageId,extractTransactionId(request),requestXml);
 			
 			//TODO : Step 1: Call Transformation Service
-			response=callInternalService(transformationUrl, requestXml,MediaType.APPLICATION_JSON);
+			response=callInternalService(transformationUrl, requestXml,MediaType.APPLICATION_XML);
 			
 			//TODO : Step 2: Audit Service for Transformation
+			System.out.println("**********Sending the message to kafka topic");
+			kafkaTemplate.send(TOPIC, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
 			
 			//TODO : Step 3: Call Persistence Service
 			
 			String perResponse=callInternalService(persistenceUrl, response,MediaType.APPLICATION_JSON);
-			System.out.println("Response :: "+response);
+			System.out.println("Persistence Response :: "+perResponse);
 			
 			//TODO : Step 4: Audit Service for Persistence
 			
 			//TODO : Step 5: Call Validation Service
 			
 			String valResponse=callInternalService(validationUrl, response,MediaType.APPLICATION_JSON);
-			System.out.println("Response :: "+response);
+			System.out.println("Validation Response :: "+valResponse);
 			
 			//TODO : Step 6: Audit Service Validation 
 			
