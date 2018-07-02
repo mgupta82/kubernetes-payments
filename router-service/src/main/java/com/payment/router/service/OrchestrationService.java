@@ -16,6 +16,7 @@ import org.springframework.web.client.RestTemplate;
 import com.payment.router.model.AuditMessage;
 import com.payment.router.errorhandler.ServiceErrorHandler;
 import com.payment.router.model.Transaction;
+import com.payment.router.util.OrchestrationUtils;
 
 
 @Service
@@ -91,22 +92,24 @@ public class OrchestrationService {
 			response=callInternalService(transformationUrl, requestXml,MediaType.APPLICATION_XML);
 			
 			//TODO : Step 2: Audit Service for Transformation
-			System.out.println("**********Sending the message to kafka topic");
-			kafkaTemplate.send(TOPIC, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
+			logger.info("**********Sending the message to kafka topic");
+			//kafkaTemplate.send(TOPIC, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
+			kafkaTemplate.send(TOPIC,OrchestrationUtils.convertResponseToAuditMessage(response, messageId, "Transformation"));
 			
 			//TODO : Step 3: Call Persistence Service
 			
 			String perResponse=callInternalService(persistenceUrl, response,MediaType.APPLICATION_JSON);
-			System.out.println("Persistence Response :: "+perResponse);
+			logger.info("Persistence Response :: "+perResponse);
 			
 			//TODO : Step 4: Audit Service for Persistence
-			
+			kafkaTemplate.send(TOPIC,OrchestrationUtils.convertResponseToAuditMessage(perResponse, messageId, "Persistence"));
 			//TODO : Step 5: Call Validation Service
 			
 			String valResponse=callInternalService(validationUrl, response,MediaType.APPLICATION_JSON);
-			System.out.println("Validation Response :: "+valResponse);
+			logger.info("Validation Response :: "+valResponse);
 			
 			//TODO : Step 6: Audit Service Validation 
+			kafkaTemplate.send(TOPIC,OrchestrationUtils.convertResponseToAuditMessage(valResponse, messageId, "Validation"));
 			
 			//TODO : Step 7: Call Core Service
 
