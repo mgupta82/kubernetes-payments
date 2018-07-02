@@ -9,9 +9,11 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
+import com.payment.router.model.AuditMessage;
 import com.payment.router.errorhandler.ServiceErrorHandler;
 import com.payment.router.model.Transaction;
 
@@ -44,6 +46,11 @@ public class OrchestrationService {
 	
 	@Autowired
 	MarshallingService marshallingService;
+	
+	private static final String TOPIC = "audit_test";
+	@Autowired
+    private KafkaTemplate<String, AuditMessage> kafkaTemplate;
+
 	
 	public void process(String requestxml) {
 		iso.std.iso._20022.tech.xsd.pacs_008_001.Document request = parseXml(requestxml);
@@ -84,6 +91,8 @@ public class OrchestrationService {
 			response=callInternalService(transformationUrl, requestXml,MediaType.APPLICATION_JSON);
 			
 			//TODO : Step 2: Audit Service for Transformation
+			System.out.println("**********Sending the message to kafka topic");
+			kafkaTemplate.send(TOPIC, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
 			
 			//TODO : Step 3: Call Persistence Service
 			
