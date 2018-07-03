@@ -2,7 +2,7 @@ package com.payment.router.model;
 
 public class AuditMessage {
 
-	private String id;
+	private String messageId;
 	private String service;
 	private String statusCode;
 	private String statusDesc;
@@ -11,7 +11,7 @@ public class AuditMessage {
 	public AuditMessage(String id, String service, String statusCode,
 			String statusDesc, String timestamp) {
 		super();
-		this.id = id;
+		this.messageId = id;
 		this.service = service;
 		this.statusCode = statusCode;
 		this.statusDesc = statusDesc;
@@ -19,11 +19,11 @@ public class AuditMessage {
 	}
 
 	public String getId() {
-		return id;
+		return messageId;
 	}
 
 	public void setId(String id) {
-		this.id = id;
+		this.messageId = id;
 	}
 
 	public String getService() {
