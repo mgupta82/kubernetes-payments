@@ -27,7 +27,7 @@ public class PersistanceServiceImpl implements PersistanceService {
 
 	ObjectMapper mapper = new ObjectMapper();
 
-	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss:SSS");
+	SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss"); //2015-11-09T10:09:13
 
 	@Override
 	@Transactional
