@@ -4,11 +4,11 @@ import java.util.List;
 
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import com.hcl.kafka.auditserviceconsumer.model.AuditResponse;
+import com.payment.router.model.AuditMessage;
 
-public interface AuditRepository extends MongoRepository<AuditResponse, String> {
+public interface AuditRepository extends MongoRepository<AuditMessage, String> {
 
-    public List<AuditResponse> findByService(String Service);
-    public List<AuditResponse> findByStatusCode(String statusCode);
+    public List<AuditMessage> findByService(String Service);
+    public List<AuditMessage> findByStatusCode(String statusCode);
 
 }

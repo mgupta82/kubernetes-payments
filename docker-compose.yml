@@ -1,5 +1,5 @@
 active-mq:
-  image: rmohr/activemq
+  image: webcenter/activemq
   ports:
   - 8161:8161
   - 61616:61616
@@ -7,26 +7,26 @@ active-mq:
   - 61613:61613
   - 1883:1883
   - 61614:61614
+  environment:
+  - ACTIVEMQ_STATIC_QUEUES=pacs.002.001.09.response.queue;pacs.008.001.07.request.queue
   
 router-db:
   image: mongo
   ports:
   - 27017:27017
 
-cassandra-db:
-  image: cassandra
-  ports:
-  - 9042:9042
-  - 7199:7199
-  - 9160:9160
-  - 7000:7000
-  - 7001:7001
+persistence-db:
+  image: payment/persistencedb
+  restart: always
+  ports: 
+  - 3306:3306
+  environment:
+  - MYSQL_ROOT_PASSWORD=sourav
  
 router-service:
   image: payment/router-service
   links:
   - router-db:routerdb
   - active-mq:activemq
-  - cassandra-db:cassandradb
   ports:
   - 8080:8080
