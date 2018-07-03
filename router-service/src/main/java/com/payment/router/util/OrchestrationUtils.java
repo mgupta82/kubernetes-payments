@@ -15,7 +15,7 @@ public class OrchestrationUtils {
 		ObjectMapper mapper=new ObjectMapper();
 		AuditMessage message = null;
 		ServiceResponse serviceResponse=null;
-		if(!"Transformation".equals(service)) {		
+		if("Transformation".equals(service)) {		
 			message = new AuditMessage(msgId, service, "0000", "Transformation Successful", Calendar.getInstance().getTime().toString());
 		}
 		else {

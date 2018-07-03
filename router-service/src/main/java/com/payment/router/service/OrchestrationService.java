@@ -33,6 +33,9 @@ public class OrchestrationService {
 	@Value("${validation.service.url}")
 	private String validationUrl;
 	
+	@Value("${audit.kafka.topic}")
+	private String kafkaTopic;
+
 	@Autowired
 	private ServiceErrorHandler errorHandler;
 	
@@ -48,7 +51,6 @@ public class OrchestrationService {
 	@Autowired
 	MarshallingService marshallingService;
 	
-	private static final String TOPIC = "audit_test";
 	@Autowired
     private KafkaTemplate<String, AuditMessage> kafkaTemplate;
 
@@ -94,7 +96,7 @@ public class OrchestrationService {
 			//TODO : Step 2: Audit Service for Transformation
 			logger.info("**********Sending the message to kafka topic");
 			//kafkaTemplate.send(TOPIC, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
-			kafkaTemplate.send(TOPIC,OrchestrationUtils.convertResponseToAuditMessage(response, messageId, "Transformation"));
+			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(response, messageId, "Transformation"));
 			
 			//TODO : Step 3: Call Persistence Service
 			
@@ -102,14 +104,14 @@ public class OrchestrationService {
 			logger.info("Persistence Response :: "+perResponse);
 			
 			//TODO : Step 4: Audit Service for Persistence
-			kafkaTemplate.send(TOPIC,OrchestrationUtils.convertResponseToAuditMessage(perResponse, messageId, "Persistence"));
+			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(perResponse, messageId, "Persistence"));
 			//TODO : Step 5: Call Validation Service
 			
 			String valResponse=callInternalService(validationUrl, response,MediaType.APPLICATION_JSON);
 			logger.info("Validation Response :: "+valResponse);
 			
 			//TODO : Step 6: Audit Service Validation 
-			kafkaTemplate.send(TOPIC,OrchestrationUtils.convertResponseToAuditMessage(valResponse, messageId, "Validation"));
+			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(valResponse, messageId, "Validation"));
 			
 			//TODO : Step 7: Call Core Service
 

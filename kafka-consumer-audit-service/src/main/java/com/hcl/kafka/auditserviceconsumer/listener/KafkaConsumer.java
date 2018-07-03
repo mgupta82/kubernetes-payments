@@ -13,14 +13,13 @@ public class KafkaConsumer {
 	@Autowired
 	private AuditRepository repository;	
 
-
-    @KafkaListener(topics = "audit_test")
+    @KafkaListener(topics = "${audit.kafka.topic}")
     public void consume(String message) {
         System.out.println("Consumed message: " + message);
     }
 
 
-    @KafkaListener(topics = "audit_test",
+    @KafkaListener(topics = "${audit.kafka.topic}",
             containerFactory = "auditKafkaListenerFactory")
     public void consumeJson(AuditMessage response) {
     	System.out.println("Value of service name and status: " + response.getService() + " --> " + response.getStatusCode() + " --->" + response.getStatusDesc());
