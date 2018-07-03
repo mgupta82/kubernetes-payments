@@ -11,6 +11,7 @@ services:
     environment:
       KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
       KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_CREATE_TOPICS: "audit_test"
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
 
