@@ -39,7 +39,14 @@ services:
     - 3306:3306
     environment:
     - MYSQL_ROOT_PASSWORD=sourav
- 
+
+  persistance-service:
+    image: persistance-api
+    links:
+    - persistence-db:persistencedb
+    ports:
+    - 8192:8192
+
   router-service:
     image: payment/router-service
     links:
@@ -47,4 +54,3 @@ services:
     - active-mq:activemq
     ports:
     - 8080:8080
-

@@ -1,5 +1,5 @@
 FROM openjdk:8-jdk-alpine
-EXPOSE 8080
+EXPOSE 8192
 VOLUME /tmp
 ARG JAR_FILE
 COPY ${JAR_FILE} router-service.jar

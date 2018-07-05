@@ -1,5 +1,12 @@
 cd mysql
+
 docker build -t payment/persistencedb .
+
+cd ..
+
+cd persistance-api
+
+mvn dockerfile:build
 
 cd ..
 
