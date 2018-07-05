@@ -52,5 +52,6 @@ services:
     links:
     - router-db:routerdb
     - active-mq:activemq
+    - persistance-service:persistanceservice
     ports:
     - 8080:8080
