@@ -6,10 +6,10 @@ cd ..
 
 cd persistance-api
 
-mvn clean install dockerfile:build -DskipTests
+call mvn clean install dockerfile:build -DskipTests
 
 cd router-service
 
-mvn clean install dockerfile:build -DskipTests
+call mvn clean install dockerfile:build -DskipTests
 
 cd ..
