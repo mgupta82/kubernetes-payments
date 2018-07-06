@@ -19,3 +19,9 @@ cd router-service
 call mvn clean install dockerfile:build -DskipTests
 
 cd ..
+
+cd kafka-consumer-audit-service
+
+call mvn clean install dockerfile:build
+
+cd ..

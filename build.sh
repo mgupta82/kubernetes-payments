@@ -6,14 +6,19 @@ cd ..
 
 cd persistance-api
 
-mvn clean install dockerfile:build -DskipTests
+mvn dockerfile:build
 
 cd ..
-
 
 cd router-service
 
-
-mvn clean install dockerfile:build -DskipTests
+mvn clean install dockerfile:build
 
 cd ..
+
+cd kafka-consumer-audit-service
+
+mvn clean install dockerfile:build
+
+cd ..
+
