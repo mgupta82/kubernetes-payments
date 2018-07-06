@@ -47,6 +47,11 @@ services:
     ports:
     - 8192:8192
 
+  persistance-service:
+    image: payment/validation-service
+    ports:
+    - 8085:8085
+
   router-service:
     image: payment/router-service
     links:
