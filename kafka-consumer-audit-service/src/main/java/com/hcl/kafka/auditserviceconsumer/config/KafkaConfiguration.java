@@ -26,7 +26,7 @@ public class KafkaConfiguration {
 	
 	@Bean 
 	public MongoClient mongoClient() {
-		return new MongoClient("Localhost");
+		return new MongoClient("routerdb");
 	}
 
 

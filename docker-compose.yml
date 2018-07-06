@@ -55,3 +55,10 @@ services:
     - persistance-service:persistanceservice
     ports:
     - 8080:8080
+    
+  audit-service:
+    image: payment/auditservice-consumer-kafka
+    links:
+    - router-db:routerdb
+    - kafka:kafka
+    - zookeeper:zookeeper
