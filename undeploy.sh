@@ -1,5 +1,7 @@
 oc login
 
+oc project payment
+
 oc delete all --selector app=persistanceservice
 
 oc delete all --selector app=persistencedb
