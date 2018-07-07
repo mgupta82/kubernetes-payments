@@ -37,8 +37,6 @@ services:
     restart: always
     ports: 
     - 3306:3306
-    environment:
-    - MYSQL_ROOT_PASSWORD=sourav
 
   persistance-service:
     image: payment/persistance-api
