@@ -4,6 +4,12 @@ docker build -t payment/persistencedb .
 
 cd ..
 
+cd TransformationService
+
+mvn clean install dockerfile:build -DskipTests
+
+cd ..
+
 cd persistance-api
 
 mvn clean install dockerfile:build -DskipTests
