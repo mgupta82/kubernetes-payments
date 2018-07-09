@@ -36,13 +36,13 @@ public class PersistanceServiceImpl implements PersistanceService {
 		try {
 			persistanceRepository.save(prepDataObj(requestJsonObj));
 		} catch (JsonProcessingException e) {
-			logger.error(e.getMessage(), e.getCause());
+			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Parsing error", "error");
 		} catch (ParseException e) {
-			logger.error(e.getMessage(), e.getCause());
+			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Parsing error", "error");
 		} catch (Exception e) {
-			logger.error(e.getMessage(), e.getCause());
+			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Persistence error", "error");
 		}
 		return new PersistanceResponseMessage("0000", "success", "success");

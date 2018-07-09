@@ -1,0 +1,110 @@
+{
+    "Document": {
+        "FIToFICstmrCdtTrf": {
+            "GrpHdr": {
+                "InstdAgt": {
+                    "FinInstnId": {
+                        "BICFI": "BBBBIE2D"
+                    }
+                },
+                "CreDtTm": "2015-11-09T10:09:13",
+                "SttlmInf": {
+                    "SttlmMtd": "INDA"
+                },
+                "NbOfTxs": 1,
+                "MsgId": "AAAA/151109-CCT/AUD/443",
+                "InstgAgt": {
+                    "FinInstnId": {
+                        "BICFI": "A"
+                    }
+                }
+            },
+            "CdtTrfTxInf": {
+                "Cdtr": {
+                    "PstlAdr": {
+                        "BldgNb": 27,
+                        "StrtNm": "Grain Lane",
+                        "Ctry": "IE",
+                        "TwnNm": "Dublin"
+                    },
+                    "Nm": "Seed Inc."
+                },
+                "DbtrAcct": {
+                    "Id": {
+                        "Othr": {
+                            "Id": 46373892034012
+                        }
+                    }
+                },
+                "Purp": {
+                    "Cd": "GDDS"
+                },
+                "CdtrAcct": {
+                    "Id": {
+                        "Othr": {
+                            "Id": 46373892034013
+                        }
+                    }
+                },
+                "PmtId": {
+                    "InstrId": "AAAA/151109-CCT/AUD/443/1",
+                    "TxId": "AAAA/151109-CCT/AUD/443/1",
+                    "EndToEndId": "CROPS/SX-25T/2015-10-13"
+                },
+                "DbtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": "AAAAGB2L"
+                    }
+                },
+                "ChrgBr": "SHAR",
+                "RmtInf": {
+                    "Strd": {
+                        "RfrdDocInf": {
+                            "Nb": "SX-25T",
+                            "Tp": {
+                                "CdOrPrtry": {
+                                    "Cd": "CINV"
+                                }
+                            },
+                            "RltdDt": "2015-10-13"
+                        }
+                    }
+                },
+                "UltmtDbtr": {
+                    "PstlAdr": {
+                        "BldgNb": 17,
+                        "StrtNm": "Growth Street",
+                        "Ctry": "GB",
+                        "TwnNm": "Glasgow",
+                        "PstCd": "G5 OTW"
+                    },
+                    "Nm": "Biogenetics - CROPS"
+                },
+                "IntrBkSttlmDt": "2015-11-09",
+                "CdtrAgt": {
+                    "FinInstnId": {
+                        "BICFI": "BBBBIE2D"
+                    }
+                },
+                "IntrBkSttlmAmt": {
+                    "Amount": 750000,
+                    "Ccy": "AUD"
+                },
+                "InstdAmt": {
+                    "Amount": 75000,
+                    "Ccy": "AUD"
+                },
+                "Dbtr": {
+                    "PstlAdr": {
+                        "BldgNb": 13,
+                        "StrtNm": "Corn Street",
+                        "Ctry": "GB",
+                        "TwnNm": "London",
+                        "PstCd": "W6 8DR"
+                    },
+                    "Nm": "Biogenetics - HQ"
+                }
+            }
+        }
+    }
+}
