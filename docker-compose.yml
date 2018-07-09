@@ -53,8 +53,8 @@ services:
   transformation-service:
     image: payment/transformation-service
     ports:
-    - 8090:8090	
-	
+    - 8090:8090
+
   router-service:
     image: payment/router-service
     links:
