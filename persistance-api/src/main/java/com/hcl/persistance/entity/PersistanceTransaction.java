@@ -7,7 +7,7 @@ import javax.persistence.Id;
 import javax.persistence.Table;
 
 @Entity
-@Table(name = "TBL_PERSISTING_TRANS")
+@Table(name = "tbl_persisting_trans")
 public class PersistanceTransaction {
 
 	@Id

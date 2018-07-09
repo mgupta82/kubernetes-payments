@@ -1,4 +1,4 @@
 use projectdb;
 
-CREATE TABLE projectdb.TBL_PERSISTING_TRANS (MSG_ID varchar(100) NOT NULL,TRX_ID varchar(256) NOT NULL,CREDIT_DATE_TIME TIMESTAMP,BSB varchar(20),SUM_AMT float,BRANCH_ID varchar(40),STLMNT_AMT float,DEBTOR_NAME varchar(256),CREDITOR_NAME varchar(256),CURRENCY varchar(20), REQUEST_OBJ text NOT NULL, CREDITOR_ACC bigint NOT NULL, DEBTOR_ACC  bigint NOT NULL, PRIMARY KEY (MSG_ID));
+CREATE TABLE projectdb.tbl_persisting_trans(msg_id varchar(100) NOT NULL,trx_id varchar(256) NOT NULL,credit_date_time TIMESTAMP,BSB varchar(20),sum_amt float,branch_id varchar(40),stlmnt_amt float,debtor_name varchar(256),creditor_name varchar(256),currency varchar(20), request_obj text NOT NULL, creditor_acc bigint NOT NULL, debtor_acc  bigint NOT NULL, PRIMARY KEY (msg_id));
 
