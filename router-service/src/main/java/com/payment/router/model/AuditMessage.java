@@ -8,22 +8,14 @@ public class AuditMessage {
 	private String statusDesc;
 	private String timestamp;
 
-	public AuditMessage(String id, String service, String statusCode,
-			String statusDesc, String timestamp) {
+
+	public AuditMessage(String messageId, String service, String statusCode, String statusDesc, String timestamp) {
 		super();
-		this.messageId = id;
+		this.messageId = messageId;
 		this.service = service;
 		this.statusCode = statusCode;
 		this.statusDesc = statusDesc;
 		this.timestamp = timestamp;
-	}
-
-	public String getId() {
-		return messageId;
-	}
-
-	public void setId(String id) {
-		this.messageId = id;
 	}
 
 	public String getService() {
@@ -56,6 +48,14 @@ public class AuditMessage {
 
 	public void setTimestamp(String timestamp) {
 		this.timestamp = timestamp;
+	}
+
+	public String getMessageId() {
+		return messageId;
+	}
+
+	public void setMessageId(String messageId) {
+		this.messageId = messageId;
 	}
 
 }
