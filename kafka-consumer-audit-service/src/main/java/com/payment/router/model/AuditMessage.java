@@ -18,6 +18,10 @@ public class AuditMessage {
 		this.timestamp = timestamp;
 	}
 
+	public AuditMessage() {
+		super();
+	}
+
 	public String getService() {
 		return service;
 	}
