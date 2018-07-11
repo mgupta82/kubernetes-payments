@@ -4,6 +4,7 @@ import java.io.ByteArrayInputStream;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 
@@ -23,10 +24,11 @@ import javax.xml.validation.Schema;
 import javax.xml.validation.SchemaFactory;
 import javax.xml.validation.Validator;
 
-//import org.apache.log4j.Logger;
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.IOUtils;
 import org.json.JSONObject;
 import org.json.XML;
-import org.springframework.util.ResourceUtils;
+import org.springframework.core.io.ClassPathResource;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -39,8 +41,8 @@ import org.xml.sax.SAXException;
 public class ValidateUtility {
 
 	//private static final Logger LOG = Logger.getLogger(ValidateUtility.class);
-	
-	private static String XSD_PATH = "classpath:xsd/";
+	private static final String XSD_PATH = "xsd/";
+	private static final String TEMP_FILE_PREFIX = "temp";
 	
 	
 	
@@ -53,12 +55,19 @@ public class ValidateUtility {
 	public static boolean isXMLValid(String XSDFileName, String XML) 
 	{
         final SchemaFactory factory = SchemaFactory.newInstance(XMLConstants.W3C_XML_SCHEMA_NS_URI);
+		InputStream inputStream = null;
         try 
-        {
-        	File file = ResourceUtils.getFile(XSD_PATH + XSDFileName);            
-            final Schema schema = factory.newSchema(file);
+        {        	
+        	ClassPathResource classPathResource = new ClassPathResource(XSD_PATH + XSDFileName);
+
+        	inputStream = classPathResource.getInputStream();
+        	File tempXSDFile = File.createTempFile(TEMP_FILE_PREFIX, Constant.XSD_STR);        	
+        	FileUtils.copyInputStreamToFile(inputStream, tempXSDFile);
+        
+        	final Schema schema = factory.newSchema(tempXSDFile);
             final Validator validator =  schema.newValidator();
-            validator.validate(new StreamSource(new ByteArrayInputStream(XML.getBytes())));
+            validator.validate(new StreamSource(new ByteArrayInputStream(XML.getBytes())));  
+        	tempXSDFile = null;
         } 
         catch(FileNotFoundException ex) {
         	ex.printStackTrace();
@@ -73,6 +82,10 @@ public class ValidateUtility {
         	e.printStackTrace();
             return false;
         }
+        finally
+        {
+        	IOUtils.closeQuietly(inputStream);
+        }
         return true;
     }
 	
@@ -81,7 +94,7 @@ public class ValidateUtility {
 	 * @param xml
 	 * @return
 	 */
-	public static String getMsgFormatType(String xml)
+	/*public static String getMsgFormatType(String xml)
 	{
 		String msgFormat = null;
 		try
@@ -90,14 +103,13 @@ public class ValidateUtility {
 			if(doc != null) {
 				String nodeValue = doc.getFirstChild().getAttributes().getNamedItem("xmlns").toString();				
 				msgFormat = nodeValue.substring(nodeValue.lastIndexOf("pacs") ).replace('"', ' ');
-				System.out.println(msgFormat);
 			}			
 		}
 		catch(Exception ex) {
 			ex.printStackTrace();
 		}
 		return msgFormat;
-	}
+	}*/
 	
 
 	/**
@@ -131,7 +143,7 @@ public class ValidateUtility {
 		JSONObject soapDatainJsonObject = new JSONObject();
 		try 
 		{
-			System.out.println(xmlString);
+			//System.out.println(xmlString);
 			Document doc = parseXmlFile(xmlString);
 			
 			if(doc.getFirstChild().getAttributes().getNamedItem("xmlns") != null ) {
@@ -174,7 +186,7 @@ public class ValidateUtility {
 			e.printStackTrace();
 		}
 		
-		System.out.println(soapDatainJsonObject);
+		//System.out.println(soapDatainJsonObject);
 		return soapDatainJsonObject;
 	}
 
