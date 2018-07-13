@@ -4,6 +4,7 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+
   kafka:
     image: wurstmeister/kafka:0.10.2.0-1
     ports:
@@ -25,8 +26,12 @@ services:
     - 1883:1883
     - 61614:61614
     environment:
-    - ACTIVEMQ_STATIC_QUEUES=pacs.002.001.09.response.queue;pacs.008.001.07.request.queue
-  
+       - ACTIVEMQ_STATIC_QUEUES=pacs.002.001.09.response.queue;pacs.008.001.07.request.queue
+  zipkin-host:
+    image: openzipkin/zipkin
+    ports:
+      - 9411:9411
+
   router-db:
     image: mongo
     ports:
@@ -42,18 +47,32 @@ services:
     image: payment/persistance-api
     links:
     - persistence-db:persistencedb
+    - zipkin-host:zipkin-host
     ports:
     - 8192:8192
+    environment:
+       - SPRING_PROFILES_ACTIVE=container
+       - SPRING_SLEUTH_SAMPLER_PERCENTAGE=1
 
   validation-service:
     image: payment/validation-service
+    links:
+    - zipkin-host:zipkin-host
     ports:
     - 8083:8083
+    environment:
+       - SPRING_PROFILES_ACTIVE=container
+       - SPRING_SLEUTH_SAMPLER_PERCENTAGE=1
 
   transformation-service:
     image: payment/transformation-service
+    links:
+    - zipkin-host:zipkin-host
     ports:
     - 8090:8090
+    environment:
+       - SPRING_PROFILES_ACTIVE=container
+       - SPRING_SLEUTH_SAMPLER_PERCENTAGE=1
 
   router-service:
     image: payment/router-service
@@ -63,12 +82,20 @@ services:
     - persistance-service:persistanceservice
     - validation-service:validationservice
     - transformation-service:transformationservice
+    - zipkin-host:zipkin-host
     ports:
     - 8080:8080
-    
+    environment:
+       - SPRING_PROFILES_ACTIVE=container
+       - SPRING_SLEUTH_SAMPLER_PERCENTAGE=1
+
   audit-service:
     image: payment/auditservice-consumer-kafka
     links:
     - router-db:routerdb
     - kafka:kafka
     - zookeeper:zookeeper
+    - zipkin-host:zipkin-host
+    environment:
+       - SPRING_PROFILES_ACTIVE=container
+       - SPRING_SLEUTH_SAMPLER_PERCENTAGE=1
