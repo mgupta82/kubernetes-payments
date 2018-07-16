@@ -14,8 +14,6 @@ cd mysql
 
 source run.sh
 
-sleep 5
-
 oc rollout latest persistencedb
 
 cd ..
@@ -26,12 +24,7 @@ mvn clean install fabric8:deploy -Popenshift -DskipTests
 
 cd ..
 
-oc new-app --name="routerdb" \
-    -e MONGODB_USER=test \
-    -e MONGODB_PASSWORD=test \
-    -e MONGODB_DATABASE=router \
-    -e MONGODB_ADMIN_PASSWORD=secret \
-    registry.access.redhat.com/rhscl/mongodb-32-rhel7
+oc new-app --name="routerdb" mongo
 
 oc create sa amq-service-account
 
