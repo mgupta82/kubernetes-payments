@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.anzpoc.core.utility.CommonUtility;
+//import com.anzpoc.core.utility.CommonUtility;
 import com.anzpoc.core.utility.Constant;
 import com.anzpoc.core.utility.ValidateUtility;
 //import com.relops.snowflake.Snowflake;
@@ -18,6 +18,7 @@ import com.anzpoc.core.utility.ValidateUtility;
 @RestController
 @RequestMapping("/anz/transform")
 public class ANZEnterpriseTransformationService {
+	
 
 	/**
 	 * 
@@ -32,12 +33,12 @@ public class ANZEnterpriseTransformationService {
 		try
 		{
 			//1. validate xml against xsd
-			String msgFormatType = ValidateUtility.getMsgFormatType(pacsMsgXML).trim();
+			String msgFormatType = Constant.PACS_008_MSG_FORMAT + Constant.XSD_STR;//ValidateUtility.getMsgFormatType(pacsMsgXML).trim();
 			
-			boolean isSupportedFlag = CommonUtility.checkIfPaymentTypeSupported(msgFormatType);
-			if(isSupportedFlag) 
-			{
-				boolean isValidXML = ValidateUtility.isXMLValid(msgFormatType+".xsd", pacsMsgXML);
+			//boolean isSupportedFlag = CommonUtility.checkIfPaymentTypeSupported(msgFormatType);
+			//if(isSupportedFlag) 
+			//{
+				boolean isValidXML = ValidateUtility.isXMLValid(msgFormatType, pacsMsgXML);
 				
 				//2. transform xml to json
 				if(isValidXML) {
@@ -57,12 +58,12 @@ public class ANZEnterpriseTransformationService {
 					jsonResponse.put(Constant.REASON_DESC, Constant.VALIDATION_PARSING_ERROR_DESC);
 				}
 				
-			}
-			else {
+			//}
+			/*else {
 				jsonResponse = new JSONObject();
 				jsonResponse.put(Constant.REASON_CODE, Constant.VALIDATION_PARSING_ERROR_CODE);
 				jsonResponse.put(Constant.REASON_DESC, Constant.VALIDATION_PARSING_ERROR_DESC);
-			}
+			}*/
 		}
 		catch(Exception ex)
 		{

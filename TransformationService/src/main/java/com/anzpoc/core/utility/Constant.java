@@ -16,10 +16,12 @@ public class Constant
 	
 	public static final String ACTIVE = "Y";
 	public static final String INACTIVE = "N";
-		
-	
+			
 	public static final String LOCALE_COUNTRY = "US";
 	public static final String LOCALE_LANG = "en";	
+	
+	public static final String  PACS_008_MSG_FORMAT = "pacs.008.001.07";
+	public static final String XSD_STR = ".xsd";
 
 	public static final String PROPERTIES_FILE_TYPE = ".properties";	
 	public static final String CREATED_BY = "SYSTEM";
