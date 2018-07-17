@@ -65,6 +65,7 @@ services:
     links:
     - router-db:routerdb
     - active-mq:activemq
+    - kafka-server:kafka
     - persistance-service:persistanceservice
     - validation-service:validationservice
     - transformation-service:transformationservice
