@@ -27,10 +27,6 @@ services:
     - 61614:61614
     environment:
        - ACTIVEMQ_STATIC_QUEUES=pacs.002.001.09.response.queue;pacs.008.001.07.request.queue
-  zipkin-host:
-    image: openzipkin/zipkin
-    ports:
-      - 9411:9411
 
   router-db:
     image: mongo
