@@ -12,10 +12,10 @@
                     "SttlmMtd": "INDA"
                 },
                 "NbOfTxs": 1,
-                "MsgId": "AAAA/151109-CCT/AUD/443",
+                "MsgId": "AAAA/151109-CCT/AUD/435",
                 "InstgAgt": {
                     "FinInstnId": {
-                        "BICFI": "A"
+                        "BICFI": "AAAAGB2L"
                     }
                 }
             },
@@ -47,7 +47,7 @@
                     }
                 },
                 "PmtId": {
-                    "InstrId": "AAAA/151109-CCT/AUD/443/1",
+                    "InstrId": "AAAA/151109-CCT/AUD/436/1",
                     "TxId": "AAAA/151109-CCT/AUD/443/1",
                     "EndToEndId": "CROPS/SX-25T/2015-10-13"
                 },
