@@ -54,6 +54,18 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
+		<!-- JavaMelody Spring Boot Starter -->
+		<dependency>
+    		<groupId>org.jrobin</groupId>
+    		<artifactId>jrobin</artifactId>
+    		<version>1.5.9</version>
+		</dependency>
+
+		<dependency>
+			<groupId>net.bull.javamelody</groupId>
+			<artifactId>javamelody-spring-boot-starter</artifactId>
+			<version>1.73.1</version>
+		</dependency>
 	</dependencies>
 
 	<build>
