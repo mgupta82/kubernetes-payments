@@ -1,3 +1,4 @@
+RUN apk --update add fontconfig ttf-dejavu 
 FROM openjdk:8-jdk-alpine
 EXPOSE 8080
 VOLUME /tmp

@@ -73,3 +73,6 @@ services:
     - router-db:routerdb
     - kafka:kafka
     - zookeeper:zookeeper
+    ports:
+    - 8080:8095
+    
