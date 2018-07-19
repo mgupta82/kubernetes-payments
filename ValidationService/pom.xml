@@ -111,7 +111,7 @@
 				</configuration>
 			</plugin>
 
-                        <plugin>
+<!--                         <plugin>
                         <groupId>io.fabric8</groupId>
                         <artifactId>fabric8-maven-plugin</artifactId>
                         <version>3.5.30</version>
@@ -125,7 +125,7 @@
                                 </goals>
                           </execution>
                         </executions>
-                        </plugin>
+                        </plugin> -->
 
 
 		</plugins>
