@@ -95,7 +95,7 @@ public class OrchestrationService {
 			
 			//TODO : Step 2: Audit Service for Transformation
 			logger.info("**********Sending the message to kafka topic");
-			//kafkaTemplate.send(TOPIC, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
+			//kafkaTemplate.send(kafkaTopic, new AuditMessage("messageID1234", "Transformation Service", "ABCD12", "Error code for Transformation Service"  , "12:00:18 PM"));
 			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(response, messageId, "Transformation"));
 			
 			//TODO : Step 3: Call Persistence Service
