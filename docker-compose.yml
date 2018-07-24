@@ -4,6 +4,10 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
   kafka-server:
     image: wurstmeister/kafka:2.11-1.1.0
     privileged: true
