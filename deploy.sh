@@ -9,7 +9,7 @@ oc new-project payment --display-name="payment"
 oc project payment
 
 #############My Sql Persistence DB#########################################
-#oc new-app --name=persistencedb https://github.com/mgupta82/payment.git --context-dir=mysql strategy=docker
+#oc new-app mysql/ --name=persistencedb  strategy=docker
 
 oc new-app -e MYSQL_USER=test MYSQL_PASSWORD=test MYSQL_DATABASE=projectdb registry.access.redhat.com/rhscl/mysql-56-rhel7 --name=persistencedb
 
@@ -74,11 +74,13 @@ mvn clean install fabric8:deploy -Popenshift -DskipTests
 cd ..
 
 #################################kafka and Zookeeper################################
-oc create -f https://raw.githubusercontent.com/mattf/openshift-kafka/master/resources.yaml
+#oc create -f https://raw.githubusercontent.com/mattf/openshift-kafka/master/resources.yaml
+
+oc create -f kafka/resources.yaml
 
 oc new-app apache-kafka --name=kafka --param=NAME=kafka
 
-#oc run -it --rm kafka-debug --image=mattf/openshift-kafka --command -- bash
+#oc run -it --rm kafka-debug --image=mgupta82/kafka --command -- bash
 
 #sleep 10
 
