@@ -5,6 +5,11 @@ services:
     ports:
       - "2181:2181"
 
+  zipkin:
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
+	
   kafka:
     image: wurstmeister/kafka:0.10.2.0-1
   kafka-server:
