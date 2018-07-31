@@ -1,5 +1,5 @@
 # Derived from official mysql image (our base image)
-FROM mysql:5.7
+FROM docker.io/mysql:5.7
 # Add a database
 ENV MYSQL_DATABASE projectdb
 ENV MYSQL_USER test
