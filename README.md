@@ -12,3 +12,11 @@ Drop the request message (router-service/src/test/resources/FIToFICustomerCredit
 You can expect the response in response queue (**pacs.002.001.09.response.queue**).
 
 5) To stop the containers run **docker-compose down**.
+
+# payment testing
+
+   To test the router service, please follow instructions under "payment/testing-service-jmeter" project (README.md).
+   
+   Please Note: If you are willing to run JMeter tests in windows machine having Docker Quickstart, you will have to clone the entire project under /Users/<your-logged-in-user> directory. This is the only way to successfully execute the JMeter tests with docker.
+   
+     
