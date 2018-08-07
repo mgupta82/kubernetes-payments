@@ -24,9 +24,12 @@ public class KafkaConfiguration {
 	@Value("${audit.kafka.url}") 
 	private String kafkaUrl;
 	
+	@Value("${routerdb.uri}") 
+	private String routerDb;
+
 	@Bean 
 	public MongoClient mongoClient() {
-		return new MongoClient("routerdb");
+		return new MongoClient(routerDb);
 	}
 
 

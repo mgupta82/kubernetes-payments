@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import com.hcl.kafka.auditserviceconsumer.repository.AuditRepository;
 import com.payment.router.model.AuditMessage;
 
+import net.bull.javamelody.MonitoredWithSpring;
+
 @Service
 public class KafkaConsumer {
 	
@@ -19,6 +21,7 @@ public class KafkaConsumer {
     }
 
 
+    @MonitoredWithSpring
     @KafkaListener(topics = "${audit.kafka.topic}",
             containerFactory = "auditKafkaListenerFactory")
     public void consumeJson(AuditMessage response) {
