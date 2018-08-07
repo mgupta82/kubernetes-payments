@@ -9,19 +9,19 @@ oc new-project payment --display-name="payment"
 oc project payment
 
 #############My Sql Persistence DB#########################################
-#oc new-app mysql/ --name=persistencedb  strategy=docker
+oc new-app --name=persistencedb https://github.com/mgupta82/payment.git#openshift --context-dir=mysql strategy=docker
 
-oc new-app -e MYSQL_USER=test MYSQL_PASSWORD=test MYSQL_DATABASE=projectdb registry.access.redhat.com/rhscl/mysql-56-rhel7 --name=persistencedb
+#oc new-app -e MYSQL_USER=test MYSQL_PASSWORD=test MYSQL_DATABASE=projectdb registry.access.redhat.com/rhscl/mysql-56-rhel7 --name=persistencedb
 
-cd mysql
+#cd mysql
 
-source run.sh
+#source run.sh
 
-sleep 5
+#sleep 5
 
-oc rollout latest persistencedb
+#oc rollout latest persistencedb
 
-cd ..
+#cd ..
 ################Persistence Service#########################################
 #oc new-app --name=persistanceservice openshift/redhat-openjdk18-openshift:1.2~https://github.com/mgupta82/payment.git --context-dir=persistance-api  strategy=source
 
