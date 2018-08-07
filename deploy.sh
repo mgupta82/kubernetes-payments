@@ -9,7 +9,7 @@ oc new-project payment --display-name="payment"
 oc project payment
 
 #############My Sql Persistence DB#########################################
-oc new-app --name=persistencedb https://github.com/mgupta82/payment.git#openshift --context-dir=mysql strategy=docker
+oc new-app --name=persistencedb https://github.com/mgupta82/payment.git --context-dir=mysql strategy=docker
 
 #oc new-app -e MYSQL_USER=test MYSQL_PASSWORD=test MYSQL_DATABASE=projectdb registry.access.redhat.com/rhscl/mysql-56-rhel7 --name=persistencedb
 
