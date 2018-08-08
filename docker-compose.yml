@@ -72,6 +72,7 @@ services:
     - persistance-service:persistanceservice
     - validation-service:validationservice
     - transformation-service:transformationservice
+    - kafka-server:kafka
     ports:
     - 8080:8080
     
