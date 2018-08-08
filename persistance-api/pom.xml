@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
@@ -35,7 +36,7 @@
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
-		
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web-services</artifactId>
@@ -79,22 +80,22 @@
 			<artifactId>spring-boot-starter-test</artifactId>
 			<scope>test</scope>
 		</dependency>
-		
+
 		<!-- JavaMelody Spring Boot Starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-aop</artifactId>
 		</dependency>
-		
+
 		<dependency>
-    		<groupId>org.jrobin</groupId>
-    		<artifactId>jrobin</artifactId>
-    		<version>1.5.9</version>
+			<groupId>org.jrobin</groupId>
+			<artifactId>jrobin</artifactId>
+			<version>1.5.9</version>
 		</dependency>
 
 		<dependency>
 			<groupId>net.bull.javamelody</groupId>
-			<artifactId>javamelody-spring-boot-starter</artifactId>
+			<artifactId>javamelody-core</artifactId>
 			<version>1.73.1</version>
 		</dependency>
 	</dependencies>
@@ -169,31 +170,31 @@
 			</snapshots>
 		</pluginRepository>
 	</pluginRepositories>
-	
-   <profiles>
-      <profile>
-         <id>openshift</id>
-         <build>
-            <plugins>
-                <plugin>
-                <groupId>io.fabric8</groupId>
-                <artifactId>fabric8-maven-plugin</artifactId>
-                <version>3.5.30</version>
-                <executions>
-                  <execution>
-                        <id>fmp</id>
-                        <goals>
-                          <goal>resource</goal>
-                          <goal>helm</goal>
-                          <goal>build</goal>
-                        </goals>
-                  </execution>
-                </executions>
-                </plugin>
-            </plugins>
-         </build>
-      </profile>
-   </profiles>		
+
+	<profiles>
+		<profile>
+			<id>openshift</id>
+			<build>
+				<plugins>
+					<plugin>
+						<groupId>io.fabric8</groupId>
+						<artifactId>fabric8-maven-plugin</artifactId>
+						<version>3.5.30</version>
+						<executions>
+							<execution>
+								<id>fmp</id>
+								<goals>
+									<goal>resource</goal>
+									<goal>helm</goal>
+									<goal>build</goal>
+								</goals>
+							</execution>
+						</executions>
+					</plugin>
+				</plugins>
+			</build>
+		</profile>
+	</profiles>
 
 
 </project>
