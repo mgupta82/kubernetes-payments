@@ -34,9 +34,211 @@
           <boolProp name="JMSSampler.useReqMsgIdAsCorrelId">false</boolProp>
           <stringProp name="JMSSampler.timeout"></stringProp>
           <stringProp name="JMSSampler.jmsNumberOfSamplesToAggregate">1000</stringProp>
-          <stringProp name="HTTPSamper.xml_data">&lt;hello/&gt;</stringProp>
+          <stringProp name="HTTPSamper.xml_data">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Document xmlns=&quot;urn:iso:std:iso:20022:tech:xsd:pacs.008.001.07&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+	&lt;FIToFICstmrCdtTrf&gt;
+	
+		&lt;GrpHdr&gt;
+	
+			&lt;MsgId&gt;AAAA/151109-CCT/AUD/445&lt;/MsgId&gt;
+	
+			&lt;CreDtTm&gt;2015-11-09T10:09:13&lt;/CreDtTm&gt;
+	
+			&lt;NbOfTxs&gt;1&lt;/NbOfTxs&gt;
+	
+			&lt;SttlmInf&gt;
+	
+				&lt;SttlmMtd&gt;INDA&lt;/SttlmMtd&gt;
+	
+			&lt;/SttlmInf&gt;
+	
+			&lt;InstgAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;AAAAGB2L&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/InstgAgt&gt;
+	
+			&lt;InstdAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;BBBBIE2D&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/InstdAgt&gt;
+	
+		&lt;/GrpHdr&gt;
+	
+		&lt;CdtTrfTxInf&gt;
+	
+			&lt;PmtId&gt;
+	
+				&lt;InstrId&gt;AAAA/151109-CCT/AUD/443/1&lt;/InstrId&gt;
+	
+				&lt;EndToEndId&gt;CROPS/SX-25T/2015-10-13&lt;/EndToEndId&gt;
+	
+				&lt;TxId&gt;AAAA/151109-CCT/AUD/443/1&lt;/TxId&gt;
+	
+			&lt;/PmtId&gt;
+	
+			&lt;IntrBkSttlmAmt Ccy=&quot;AUD&quot;&gt;750000&lt;/IntrBkSttlmAmt&gt;
+	
+			&lt;IntrBkSttlmDt&gt;2015-11-09&lt;/IntrBkSttlmDt&gt;
+	
+			&lt;InstdAmt Ccy=&quot;AUD&quot;&gt;75000&lt;/InstdAmt&gt;
+	
+			&lt;ChrgBr&gt;SHAR&lt;/ChrgBr&gt;
+	
+			&lt;UltmtDbtr&gt;
+	
+				&lt;Nm&gt;Biogenetics - CROPS&lt;/Nm&gt;
+	
+				&lt;PstlAdr&gt;
+	
+					&lt;StrtNm&gt;Growth Street&lt;/StrtNm&gt;
+	
+					&lt;BldgNb&gt;17&lt;/BldgNb&gt;
+	
+					&lt;PstCd&gt;G5 OTW&lt;/PstCd&gt;
+	
+					&lt;TwnNm&gt;Glasgow&lt;/TwnNm&gt;
+	
+					&lt;Ctry&gt;GB&lt;/Ctry&gt;
+	
+				&lt;/PstlAdr&gt;
+	
+			&lt;/UltmtDbtr&gt;
+	
+			&lt;Dbtr&gt;
+	
+				&lt;Nm&gt;Biogenetics - HQ&lt;/Nm&gt;
+	
+				&lt;PstlAdr&gt;
+	
+					&lt;StrtNm&gt;Corn Street&lt;/StrtNm&gt;
+	
+					&lt;BldgNb&gt;13&lt;/BldgNb&gt;
+	
+					&lt;PstCd&gt;W6 8DR&lt;/PstCd&gt;
+	
+					&lt;TwnNm&gt;London&lt;/TwnNm&gt;
+	
+					&lt;Ctry&gt;GB&lt;/Ctry&gt;
+	
+				&lt;/PstlAdr&gt;
+	
+			&lt;/Dbtr&gt;
+	
+			&lt;DbtrAcct&gt;
+	
+				&lt;Id&gt;
+	
+					&lt;Othr&gt;
+	
+						&lt;Id&gt;46373892034012&lt;/Id&gt;
+	
+					&lt;/Othr&gt;
+	
+				&lt;/Id&gt;
+	
+			&lt;/DbtrAcct&gt;
+	
+			&lt;DbtrAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;AAAAGB2L&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/DbtrAgt&gt;
+	
+			&lt;CdtrAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;BBBBIE2D&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/CdtrAgt&gt;
+	
+			&lt;Cdtr&gt;
+	
+				&lt;Nm&gt;Seed Inc.&lt;/Nm&gt;
+	
+				&lt;PstlAdr&gt;
+	
+					&lt;StrtNm&gt;Grain Lane&lt;/StrtNm&gt;
+	
+					&lt;BldgNb&gt;27&lt;/BldgNb&gt;
+	
+					&lt;TwnNm&gt;Dublin&lt;/TwnNm&gt;
+	
+					&lt;Ctry&gt;IE&lt;/Ctry&gt;
+	
+				&lt;/PstlAdr&gt;
+	
+			&lt;/Cdtr&gt;
+	
+			&lt;CdtrAcct&gt;
+	
+				&lt;Id&gt;
+				
+					&lt;Othr&gt;
+	
+						&lt;Id&gt;46373892034013&lt;/Id&gt;
+	
+					&lt;/Othr&gt;
+	
+				&lt;/Id&gt;
+	
+			&lt;/CdtrAcct&gt;
+	
+			&lt;Purp&gt;
+	
+				&lt;Cd&gt;GDDS&lt;/Cd&gt;
+	
+			&lt;/Purp&gt;
+	
+			&lt;RmtInf&gt;
+	
+				&lt;Strd&gt;
+	
+					&lt;RfrdDocInf&gt;
+	
+						&lt;Tp&gt;
+	
+							&lt;CdOrPrtry&gt;
+	
+								&lt;Cd&gt;CINV&lt;/Cd&gt;
+	
+							&lt;/CdOrPrtry&gt;
+	
+						&lt;/Tp&gt;
+	
+						&lt;Nb&gt;SX-25T&lt;/Nb&gt;
+	
+						&lt;RltdDt&gt;2015-10-13&lt;/RltdDt&gt;
+	
+					&lt;/RfrdDocInf&gt;
+	
+				&lt;/Strd&gt;
+	
+			&lt;/RmtInf&gt;
+	
+		&lt;/CdtTrfTxInf&gt;
+	
+	&lt;/FIToFICstmrCdtTrf&gt;
+&lt;/Document&gt;
+</stringProp>
           <stringProp name="JMSSampler.initialContextFactory">org.apache.activemq.jndi.ActiveMQInitialContextFactory</stringProp>
-          <stringProp name="JMSSampler.contextProviderUrl">tcp://192.168.8.105:61610/</stringProp>
+          <stringProp name="JMSSampler.contextProviderUrl">tcp://localhost:61616/</stringProp>
           <elementProp name="JMSSampler.jndiProperties" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>
