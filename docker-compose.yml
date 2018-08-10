@@ -47,13 +47,6 @@ services:
     ports: 
     - 3306:3306
 
-  persistance-service:
-    image: payment/persistance-api
-    links:
-    - persistence-db:persistencedb
-    ports:
-    - 8192:8192
-
   validation-service:
     image: payment/validation-service
     ports:
@@ -63,6 +56,13 @@ services:
     image: payment/transformation-service
     ports:
     - 8090:8090
+    
+  persistance-service:
+    image: payment/persistance-api
+    links:
+    - persistence-db:persistencedb
+    ports:
+    - 8192:8192    
 
   router-service:
     image: payment/router-service
