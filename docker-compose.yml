@@ -4,10 +4,12 @@ services:
     image: wurstmeister/zookeeper
     ports:
       - "2181:2181"
-  zipkin:
+  
+  zipkin-host:
     image: openzipkin/zipkin
     ports:
-      - "9411:9411"
+    - 9411:9411
+
   kafka-server:
     image: wurstmeister/kafka:2.11-1.1.0
     privileged: true
@@ -51,18 +53,29 @@ services:
     image: payment/persistance-api
     links:
     - persistence-db:persistencedb
+    - zipkin-host:zipkin-host
     ports:
     - 8192:8192
+    environment:
+      SPRING_PROFILES_ACTIVE: container
 
   validation-service:
     image: payment/validation-service
+    links:
+    - zipkin-host:zipkin-host
     ports:
     - 8083:8083
+    environment:
+      SPRING_PROFILES_ACTIVE: container
 
   transformation-service:
     image: payment/transformation-service
+    links:
+    - zipkin-host:zipkin-host
     ports:
     - 8090:8090
+    environment:
+      SPRING_PROFILES_ACTIVE: container
 
   router-service:
     image: payment/router-service
@@ -73,8 +86,11 @@ services:
     - validation-service:validationservice
     - transformation-service:transformationservice
     - kafka-server:kafka
+    - zipkin-host:zipkin-host
     ports:
     - 8080:8080
+    environment:
+      SPRING_PROFILES_ACTIVE: container
     
   audit-service:
     image: payment/auditservice-consumer-kafka
@@ -82,6 +98,8 @@ services:
     - router-db:routerdb
     - kafka-server:kafka
     - zookeeper:zookeeper
+    - zipkin-host:zipkin-host
     ports:
     - 8095:8095
-    
+    environment:
+      SPRING_PROFILES_ACTIVE: container
