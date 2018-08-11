@@ -57,7 +57,7 @@ services:
     ports:
     - 8192:8192
     environment:
-      SPRING_PROFILES_ACTIVE: container
+      - SPRING_PROFILES_ACTIVE: container
 
   validation-service:
     image: payment/validation-service
@@ -66,7 +66,7 @@ services:
     ports:
     - 8083:8083
     environment:
-      SPRING_PROFILES_ACTIVE: container
+      - SPRING_PROFILES_ACTIVE: container
 
   transformation-service:
     image: payment/transformation-service
@@ -75,7 +75,7 @@ services:
     ports:
     - 8090:8090
     environment:
-      SPRING_PROFILES_ACTIVE: container
+      - SPRING_PROFILES_ACTIVE: container
 
   router-service:
     image: payment/router-service
@@ -90,7 +90,7 @@ services:
     ports:
     - 8080:8080
     environment:
-      SPRING_PROFILES_ACTIVE: container
+      - SPRING_PROFILES_ACTIVE: container
     
   audit-service:
     image: payment/auditservice-consumer-kafka
@@ -102,4 +102,4 @@ services:
     ports:
     - 8095:8095
     environment:
-      SPRING_PROFILES_ACTIVE: container
+      - SPRING_PROFILES_ACTIVE: container
