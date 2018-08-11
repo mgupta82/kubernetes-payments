@@ -1,0 +1,289 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jmeterTestPlan version="1.2" properties="4.0" jmeter="4.0 r1823414">
+  <hashTree>
+    <TestPlan guiclass="TestPlanGui" testclass="TestPlan" testname="Test Plan" enabled="true">
+      <stringProp name="TestPlan.comments"></stringProp>
+      <boolProp name="TestPlan.functional_mode">false</boolProp>
+      <boolProp name="TestPlan.tearDown_on_shutdown">true</boolProp>
+      <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
+      <elementProp name="TestPlan.user_defined_variables" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+        <collectionProp name="Arguments.arguments"/>
+      </elementProp>
+      <stringProp name="TestPlan.user_define_classpath"></stringProp>
+    </TestPlan>
+    <hashTree>
+      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Thread Group" enabled="true">
+        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController" testname="Loop Controller" enabled="true">
+          <boolProp name="LoopController.continue_forever">false</boolProp>
+          <stringProp name="LoopController.loops">1</stringProp>
+        </elementProp>
+        <stringProp name="ThreadGroup.num_threads">1</stringProp>
+        <stringProp name="ThreadGroup.ramp_time">1</stringProp>
+        <boolProp name="ThreadGroup.scheduler">false</boolProp>
+        <stringProp name="ThreadGroup.duration"></stringProp>
+        <stringProp name="ThreadGroup.delay"></stringProp>
+      </ThreadGroup>
+      <hashTree>
+        <JMSSampler guiclass="JMSSamplerGui" testclass="JMSSampler" testname="JMS Point-to-Point" enabled="true">
+          <stringProp name="JMSSampler.queueconnectionfactory">ConnectionFactory</stringProp>
+          <stringProp name="JMSSampler.SendQueue">dynamicQueues/pacs.008.001.07.request.queue</stringProp>
+          <stringProp name="JMSSampler.ReceiveQueue">dynamicQueues/pacs.002.001.09.response.queue</stringProp>
+          <intProp name="JMSSampler.communicationStyle">0</intProp>
+          <boolProp name="JMSSampler.isNonPersistent">false</boolProp>
+          <boolProp name="JMSSampler.useReqMsgIdAsCorrelId">false</boolProp>
+          <stringProp name="JMSSampler.timeout"></stringProp>
+          <stringProp name="JMSSampler.jmsNumberOfSamplesToAggregate">1000</stringProp>
+          <stringProp name="HTTPSamper.xml_data">&lt;?xml version=&quot;1.0&quot; encoding=&quot;utf-8&quot;?&gt;
+&lt;Document xmlns=&quot;urn:iso:std:iso:20022:tech:xsd:pacs.008.001.07&quot; xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
+	&lt;FIToFICstmrCdtTrf&gt;
+	
+		&lt;GrpHdr&gt;
+	
+			&lt;MsgId&gt;AAAA/151109-CCT/AUD/445&lt;/MsgId&gt;
+	
+			&lt;CreDtTm&gt;2015-11-09T10:09:13&lt;/CreDtTm&gt;
+	
+			&lt;NbOfTxs&gt;1&lt;/NbOfTxs&gt;
+	
+			&lt;SttlmInf&gt;
+	
+				&lt;SttlmMtd&gt;INDA&lt;/SttlmMtd&gt;
+	
+			&lt;/SttlmInf&gt;
+	
+			&lt;InstgAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;AAAAGB2L&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/InstgAgt&gt;
+	
+			&lt;InstdAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;BBBBIE2D&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/InstdAgt&gt;
+	
+		&lt;/GrpHdr&gt;
+	
+		&lt;CdtTrfTxInf&gt;
+	
+			&lt;PmtId&gt;
+	
+				&lt;InstrId&gt;AAAA/151109-CCT/AUD/443/1&lt;/InstrId&gt;
+	
+				&lt;EndToEndId&gt;CROPS/SX-25T/2015-10-13&lt;/EndToEndId&gt;
+	
+				&lt;TxId&gt;AAAA/151109-CCT/AUD/443/1&lt;/TxId&gt;
+	
+			&lt;/PmtId&gt;
+	
+			&lt;IntrBkSttlmAmt Ccy=&quot;AUD&quot;&gt;750000&lt;/IntrBkSttlmAmt&gt;
+	
+			&lt;IntrBkSttlmDt&gt;2015-11-09&lt;/IntrBkSttlmDt&gt;
+	
+			&lt;InstdAmt Ccy=&quot;AUD&quot;&gt;75000&lt;/InstdAmt&gt;
+	
+			&lt;ChrgBr&gt;SHAR&lt;/ChrgBr&gt;
+	
+			&lt;UltmtDbtr&gt;
+	
+				&lt;Nm&gt;Biogenetics - CROPS&lt;/Nm&gt;
+	
+				&lt;PstlAdr&gt;
+	
+					&lt;StrtNm&gt;Growth Street&lt;/StrtNm&gt;
+	
+					&lt;BldgNb&gt;17&lt;/BldgNb&gt;
+	
+					&lt;PstCd&gt;G5 OTW&lt;/PstCd&gt;
+	
+					&lt;TwnNm&gt;Glasgow&lt;/TwnNm&gt;
+	
+					&lt;Ctry&gt;GB&lt;/Ctry&gt;
+	
+				&lt;/PstlAdr&gt;
+	
+			&lt;/UltmtDbtr&gt;
+	
+			&lt;Dbtr&gt;
+	
+				&lt;Nm&gt;Biogenetics - HQ&lt;/Nm&gt;
+	
+				&lt;PstlAdr&gt;
+	
+					&lt;StrtNm&gt;Corn Street&lt;/StrtNm&gt;
+	
+					&lt;BldgNb&gt;13&lt;/BldgNb&gt;
+	
+					&lt;PstCd&gt;W6 8DR&lt;/PstCd&gt;
+	
+					&lt;TwnNm&gt;London&lt;/TwnNm&gt;
+	
+					&lt;Ctry&gt;GB&lt;/Ctry&gt;
+	
+				&lt;/PstlAdr&gt;
+	
+			&lt;/Dbtr&gt;
+	
+			&lt;DbtrAcct&gt;
+	
+				&lt;Id&gt;
+	
+					&lt;Othr&gt;
+	
+						&lt;Id&gt;46373892034012&lt;/Id&gt;
+	
+					&lt;/Othr&gt;
+	
+				&lt;/Id&gt;
+	
+			&lt;/DbtrAcct&gt;
+	
+			&lt;DbtrAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;AAAAGB2L&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/DbtrAgt&gt;
+	
+			&lt;CdtrAgt&gt;
+	
+				&lt;FinInstnId&gt;
+	
+					&lt;BICFI&gt;BBBBIE2D&lt;/BICFI&gt;
+	
+				&lt;/FinInstnId&gt;
+	
+			&lt;/CdtrAgt&gt;
+	
+			&lt;Cdtr&gt;
+	
+				&lt;Nm&gt;Seed Inc.&lt;/Nm&gt;
+	
+				&lt;PstlAdr&gt;
+	
+					&lt;StrtNm&gt;Grain Lane&lt;/StrtNm&gt;
+	
+					&lt;BldgNb&gt;27&lt;/BldgNb&gt;
+	
+					&lt;TwnNm&gt;Dublin&lt;/TwnNm&gt;
+	
+					&lt;Ctry&gt;IE&lt;/Ctry&gt;
+	
+				&lt;/PstlAdr&gt;
+	
+			&lt;/Cdtr&gt;
+	
+			&lt;CdtrAcct&gt;
+	
+				&lt;Id&gt;
+				
+					&lt;Othr&gt;
+	
+						&lt;Id&gt;46373892034013&lt;/Id&gt;
+	
+					&lt;/Othr&gt;
+	
+				&lt;/Id&gt;
+	
+			&lt;/CdtrAcct&gt;
+	
+			&lt;Purp&gt;
+	
+				&lt;Cd&gt;GDDS&lt;/Cd&gt;
+	
+			&lt;/Purp&gt;
+	
+			&lt;RmtInf&gt;
+	
+				&lt;Strd&gt;
+	
+					&lt;RfrdDocInf&gt;
+	
+						&lt;Tp&gt;
+	
+							&lt;CdOrPrtry&gt;
+	
+								&lt;Cd&gt;CINV&lt;/Cd&gt;
+	
+							&lt;/CdOrPrtry&gt;
+	
+						&lt;/Tp&gt;
+	
+						&lt;Nb&gt;SX-25T&lt;/Nb&gt;
+	
+						&lt;RltdDt&gt;2015-10-13&lt;/RltdDt&gt;
+	
+					&lt;/RfrdDocInf&gt;
+	
+				&lt;/Strd&gt;
+	
+			&lt;/RmtInf&gt;
+	
+		&lt;/CdtTrfTxInf&gt;
+	
+	&lt;/FIToFICstmrCdtTrf&gt;
+&lt;/Document&gt;
+</stringProp>
+          <stringProp name="JMSSampler.initialContextFactory">org.apache.activemq.jndi.ActiveMQInitialContextFactory</stringProp>
+          <stringProp name="JMSSampler.contextProviderUrl">tcp://localhost:61616/</stringProp>
+          <elementProp name="JMSSampler.jndiProperties" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
+            <collectionProp name="Arguments.arguments"/>
+          </elementProp>
+          <elementProp name="arguments" elementType="JMSProperties">
+            <collectionProp name="JMSProperties.properties"/>
+          </elementProp>
+        </JMSSampler>
+        <hashTree/>
+        <ResultCollector guiclass="ViewResultsFullVisualizer" testclass="ResultCollector" testname="View Results Tree" enabled="true">
+          <boolProp name="ResultCollector.error_logging">false</boolProp>
+          <objProp>
+            <name>saveConfig</name>
+            <value class="SampleSaveConfiguration">
+              <time>true</time>
+              <latency>true</latency>
+              <timestamp>true</timestamp>
+              <success>true</success>
+              <label>true</label>
+              <code>true</code>
+              <message>true</message>
+              <threadName>true</threadName>
+              <dataType>true</dataType>
+              <encoding>false</encoding>
+              <assertions>true</assertions>
+              <subresults>true</subresults>
+              <responseData>false</responseData>
+              <samplerData>false</samplerData>
+              <xml>false</xml>
+              <fieldNames>true</fieldNames>
+              <responseHeaders>false</responseHeaders>
+              <requestHeaders>false</requestHeaders>
+              <responseDataOnError>false</responseDataOnError>
+              <saveAssertionResultsFailureMessage>true</saveAssertionResultsFailureMessage>
+              <assertionsResultsToSave>0</assertionsResultsToSave>
+              <bytes>true</bytes>
+              <sentBytes>true</sentBytes>
+              <threadCounts>true</threadCounts>
+              <idleTime>true</idleTime>
+              <connectTime>true</connectTime>
+            </value>
+          </objProp>
+          <stringProp name="filename"></stringProp>
+        </ResultCollector>
+        <hashTree/>
+      </hashTree>
+    </hashTree>
+  </hashTree>
+</jmeterTestPlan>
