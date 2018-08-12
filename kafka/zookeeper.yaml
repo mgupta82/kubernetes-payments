@@ -1,0 +1,61 @@
+kind: List
+apiVersion: v1
+metadata: {}
+
+items:
+
+- apiVersion: v1
+  kind: Template
+  metadata:
+    name: apache-zookeeper
+    annotations:
+      description: 1-pod Apache zookeeper
+      tags: messaging,streaming,zookeeper
+  parameters:
+  - name: NAME
+    description: Name prefix for each object created
+    required: true
+    value: apache-zookeeper
+  - name: IMAGE
+    description: Image with Apache Kafka and Apache ZooKeeper
+    required: true
+    value: mgupta82/kafka
+  objects:
+  - apiVersion: v1
+    kind: DeploymentConfig
+    metadata:
+      name: ${NAME}
+    spec:
+      replicas: 1
+      selector:
+        deploymentconfig: ${NAME}
+      template:
+        metadata:
+          labels:
+            deploymentconfig: ${NAME}
+        spec:
+          containers:
+          - name: apache-zookeeper
+            image: ${IMAGE}
+            command:
+            - bin/zookeeper-server-start.sh
+            args:
+            - config/zookeeper.properties
+            volumeMounts:
+            - mountPath: /tmp/zookeeper
+              name: zookeeper
+            ports:
+            - containerPort: 2181
+          volumes:
+          - name: zookeeper
+            emptyDir: {}
+  - apiVersion: v1
+    kind: Service
+    metadata:
+      name: ${NAME}
+    spec:
+      ports:
+      - name: zookeeper
+        port: 2181
+      selector:
+        deploymentconfig: ${NAME}

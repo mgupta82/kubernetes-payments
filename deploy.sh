@@ -2,11 +2,19 @@ eval $(minishift oc-env)
 
 eval $(minishift docker-env)
 
-oc login
+oc login -u developer -p developer
 
 oc new-project payment --display-name="payment"
 
 oc project payment
+
+oc login -u system:admin
+
+oc project payment
+
+oc adm policy add-scc-to-user anyuid -z default
+
+oc login -u developer -p developer
 
 #############My Sql Persistence DB#########################################
 oc new-app --name=persistencedb https://github.com/mgupta82/payment.git --context-dir=mysql strategy=docker
@@ -76,7 +84,11 @@ cd ..
 #################################kafka and Zookeeper################################
 #oc create -f https://raw.githubusercontent.com/mattf/openshift-kafka/master/resources.yaml
 
-oc create -f kafka/resources.yaml
+oc create -f kafka/zookeeper.yaml
+
+oc new-app apache-zookeeper --name=zookeeper --param=NAME=zookeeper
+
+oc create -f kafka/kafka.yaml
 
 oc new-app apache-kafka --name=kafka --param=NAME=kafka
 
