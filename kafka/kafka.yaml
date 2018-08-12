@@ -51,15 +51,12 @@ items:
             - inter.broker.listener.name=INSIDE
             - --override
             - zookeeper.connect=zookeeper:2181
-            - --override
-            - log.segment.bytes=10485760
-            - --override
-            - log.retention.bytes=10485760
             volumeMounts:
             - mountPath: /tmp/kafka-logs
               name: kafka-logs
             ports:
             - containerPort: 9092
+            - containerPort: 9094
           volumes:
           - name: kafka-logs
             emptyDir: {}
@@ -71,5 +68,7 @@ items:
       ports:
       - name: kafka
         port: 9092
+      - name: kafkae
+        port: 9094 
       selector:
         deploymentconfig: ${NAME}
