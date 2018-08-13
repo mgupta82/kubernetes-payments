@@ -1,14 +1,18 @@
 package com.payment.router.jms;
 
 import java.io.IOException;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jms.annotation.JmsListener;
-import org.springframework.stereotype.Component;
-import com.payment.router.service.OrchestrationService;
-import iso.std.iso._20022.tech.xsd.pacs_008_001.Document;
+import org.springframework.jms.support.JmsMessageHeaderAccessor;
 import org.springframework.oxm.XmlMappingException;
+import org.springframework.stereotype.Component;
+
+import com.payment.router.service.OrchestrationService;
+
+import iso.std.iso._20022.tech.xsd.pacs_008_001.Document;
 
 /**
  * Class for receiving message from the request queue
@@ -23,9 +27,10 @@ public class MessageReceiver {
 	OrchestrationService service;
 	
 	@JmsListener(destination = "pacs.008.001.07.request.queue", containerFactory = "myFactory")
-    public void receiveMessage(Document request) throws XmlMappingException, IOException {
+    public void receiveMessage(Document request,JmsMessageHeaderAccessor jmsMessageHeaderAccessor) throws XmlMappingException, IOException {
 		logger.info("Message Received :" + request);
-		service.process(request);
+		logger.info("Correlation ID in received message :" + jmsMessageHeaderAccessor.getCorrelationId());
+		service.process(request,jmsMessageHeaderAccessor.getCorrelationId());
     }
 	
 /*	@JmsListener(destination = "pacs.008.001.07.request.queue")

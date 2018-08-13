@@ -114,13 +114,13 @@ public class ResponseService {
 		return document;
 	}
 	
-	private Document processSuccess(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId) throws DatatypeConfigurationException {
+	private Document processSuccess(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,String corrId) throws DatatypeConfigurationException {
 		Document document = generatePlaybackResponse(input,messageId,true);	
-		messageProducer.send(document);
+		messageProducer.send(document,corrId);
 		return document;
 	}
 	
-	private Document processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode) throws DatatypeConfigurationException {
+	private Document processFailure(iso.std.iso._20022.tech.xsd.pacs_008_001.Document input,String messageId,ErrorCode errorCode,String corrId) throws DatatypeConfigurationException {
 		
 		Document document = generatePlaybackResponse(input,messageId,false);	
 		
@@ -157,12 +157,12 @@ public class ResponseService {
 								
 		}
 		
-		messageProducer.send(document);
+		messageProducer.send(document,corrId);
 		return document;
 	}
 	
-	private void processPlayback(Transaction transaction) throws XmlMappingException, IOException {
-		messageProducer.send(marshallingService.unmarshallXml(transaction.getResponsexml()));	
+	private void processPlayback(Transaction transaction,String corrId) throws XmlMappingException, IOException {
+		messageProducer.send(marshallingService.unmarshallXml(transaction.getResponsexml()),corrId);	
 	}
 	
 	
@@ -173,11 +173,12 @@ public class ResponseService {
 	 * @param errorCode
 	 * @param paymentTransaction
 	 */
-	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,ErrorCode errorCode,Transaction transaction) {
+	public void sendNack(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,ErrorCode errorCode,Transaction transaction,String corrId) {
 		logger.info("Sending NACK for : "+messageId);
 		try {
-			Document response = processFailure(request, messageId, errorCode);
+			Document response = processFailure(request, messageId, errorCode,corrId);
 			logger.info("NACK sent successfully  : "+messageId);
+			logger.info("Correlation ID  : "+corrId);
         	if(transaction!=null) {
         		transaction.setStatus("NACK");
         		transaction.setResponsexml(marshallingService.marshallXml(response));
@@ -195,11 +196,12 @@ public class ResponseService {
 	 * @param messageId
 	 * @param paymentTransaction
 	 */
-	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,Transaction transaction) {
+	public void sendAck(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,Transaction transaction,String corrId) {
 		logger.info("Sending ACK for : "+messageId);
 		try {
-			Document response = processSuccess(request, messageId);
-			logger.info("ACK sent successfully  : "+messageId);
+			Document response = processSuccess(request, messageId,corrId);
+			logger.info("ACK sent successfully  : "+corrId);
+			logger.info("Correlation ID  : "+messageId);
 			transaction.setStatus("ACK");
 			transaction.setResponsexml(marshallingService.marshallXml(response));
 			transactionService.updatePaymentRequest(transaction, messageId);			
@@ -213,11 +215,12 @@ public class ResponseService {
 	 * @param paymentTransaction
 	 * @param messageId
 	 */
-	public void playbackResponse(Transaction transaction,String messageId) {
+	public void playbackResponse(Transaction transaction,String messageId,String corrId) {
 		logger.info("Playing back response : "+messageId);
 		try {
 			logger.info("responsexml: "+messageId + ":"+transaction.getResponsexml());
-			processPlayback(transaction);
+			logger.info("Correlation ID ::"+corrId);
+			processPlayback(transaction,corrId);
 			logger.info("Response played back for  : "+messageId);
 		}catch(Exception ex) {
 			logger.error("Severe Error : Failed to play back response : "+ex);

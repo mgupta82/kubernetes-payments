@@ -55,22 +55,22 @@ public class OrchestrationService {
     private KafkaTemplate<String, AuditMessage> kafkaTemplate;
 
 	
-	public void process(String requestxml) {
+	public void process(String requestxml,String corrId) {
 		iso.std.iso._20022.tech.xsd.pacs_008_001.Document request = parseXml(requestxml);
 		if(request!=null) {
-			process(request,requestxml);
+			process(request,requestxml,corrId);
 		}
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request) {
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String corrId) {
 		String requestxml = parseObject(request);
 		if(requestxml!=null) {
-			process(request,requestxml);
+			process(request,requestxml,corrId);
 		}
 		
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String requestXml) {
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String requestXml,String corrId) {
 		
 		//Extract Message ID
 		String messageId = extractMessageId(request);
@@ -80,7 +80,7 @@ public class OrchestrationService {
 		}
 		
 		//Check for duplicate request
-		if(processIfDuplicateRequest(request,messageId)) {
+		if(processIfDuplicateRequest(request,messageId,corrId)) {
 			return;
 		}
 		
@@ -118,11 +118,11 @@ public class OrchestrationService {
 			//TODO : Step 8: Audit Service for Core
 			
 			//Send positive ACK
-			responseService.sendAck(request, messageId,transaction);			
+			responseService.sendAck(request, messageId,transaction,corrId);			
 			logger.info("Message Processed Successfully :" + messageId);			
 		}catch(Exception ex) {
         	logger.error("Failed to Process Message "+messageId, ex);
-        	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,transaction);		
+        	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,transaction,corrId);		
 		}
 	}
 	
@@ -202,7 +202,7 @@ public class OrchestrationService {
 	 * @param messageId
 	 * @return
 	 */
-	public boolean processIfDuplicateRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId) {
+	public boolean processIfDuplicateRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,String corrId) {
 		logger.info("Checking duplicate request  : "+messageId);
 		try {
 			Transaction transaction = transactionService.findExistingRequest(messageId, extractTransactionId(request));
@@ -210,7 +210,7 @@ public class OrchestrationService {
 	    		logger.info("Duplicate Request Received "+messageId);
 	    		if(transaction.getStatus().equals("ACK") 
 	    				|| transaction.getStatus().equals("NACK")) {
-	    			responseService.playbackResponse(transaction, messageId);
+	    			responseService.playbackResponse(transaction, messageId,corrId);
 	    		}
 	    		return true;
 			}
