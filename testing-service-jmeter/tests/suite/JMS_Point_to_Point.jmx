@@ -236,7 +236,7 @@ xmlns:xsi=&quot;http://www.w3.org/2001/XMLSchema-instance&quot;&gt;
 	&lt;/FIToFICstmrCdtTrf&gt;
 &lt;/Document&gt;</stringProp>
           <stringProp name="JMSSampler.initialContextFactory">org.apache.activemq.jndi.ActiveMQInitialContextFactory</stringProp>
-          <stringProp name="JMSSampler.contextProviderUrl">tcp://192.168.8.104:61616/</stringProp>
+          <stringProp name="JMSSampler.contextProviderUrl">tcp://192.168.99.100:61616/</stringProp>
           <elementProp name="JMSSampler.jndiProperties" elementType="Arguments" guiclass="ArgumentsPanel" testclass="Arguments" testname="User Defined Variables" enabled="true">
             <collectionProp name="Arguments.arguments"/>
           </elementProp>

@@ -1,4 +1,8 @@
-oc login
+eval $(minishift oc-env)
+
+eval $(minishift docker-env)
+
+oc login -u developer -p developer
 
 oc project payment
 
@@ -17,6 +21,12 @@ oc delete all --selector app=routerdb
 oc delete all --selector app=router-service
 
 oc delete all --selector app=kafka
+
+oc delete all --selector app=zookeeper
+
+oc delete  template apache-kafka
+
+oc delete  template apache-zookeeper
 
 oc delete project payment
 
