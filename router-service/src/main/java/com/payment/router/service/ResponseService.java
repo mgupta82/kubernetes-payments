@@ -200,8 +200,8 @@ public class ResponseService {
 		logger.info("Sending ACK for : "+messageId);
 		try {
 			Document response = processSuccess(request, messageId,corrId);
-			logger.info("ACK sent successfully  : "+corrId);
-			logger.info("Correlation ID  : "+messageId);
+			logger.info("ACK sent successfully  : "+messageId);
+			logger.info("Correlation ID  : "+corrId);
 			transaction.setStatus("ACK");
 			transaction.setResponsexml(marshallingService.marshallXml(response));
 			transactionService.updatePaymentRequest(transaction, messageId);			
