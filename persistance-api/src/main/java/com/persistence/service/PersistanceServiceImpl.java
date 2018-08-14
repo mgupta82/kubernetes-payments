@@ -35,12 +35,13 @@ public class PersistanceServiceImpl implements PersistanceService {
 
 		try {
 			PersistanceTransaction persistanceTransaction = prepDataObj(requestJsonObj);
-			if (!persistanceRepository.existsByMsgId(persistanceTransaction.getMsg_Id())) {
+			//if (!persistanceRepository.existsByMsgId(persistanceTransaction.getMsg_Id())) {
 				persistanceRepository.save(persistanceTransaction);
 				return new PersistanceResponseMessage("0000", "success", "success");
-			}
+			//}
 
-		} catch (JsonProcessingException e) {
+		}
+		catch (JsonProcessingException e) {
 			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Parsing error", "error");
 		} catch (ParseException e) {
@@ -50,7 +51,7 @@ public class PersistanceServiceImpl implements PersistanceService {
 			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Persistence error", "error");
 		}
-		return new PersistanceResponseMessage("0001", "Persistence error", "error");
+		//return new PersistanceResponseMessage("0001", "Persistence error", "error");
 	}
 
 	private PersistanceTransaction prepDataObj(RequestJsonObj requestJsonObj)
