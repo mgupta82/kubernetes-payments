@@ -6,7 +6,7 @@ oc login -u developer -p developer
 
 oc project payment
 
-oc delete all --selector app=persistencedb
+#oc delete all --selector app=persistencedb
 
 oc delete all --selector app=persistance-api
 
