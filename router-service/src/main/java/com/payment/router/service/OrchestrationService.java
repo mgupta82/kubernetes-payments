@@ -13,8 +13,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.payment.router.model.AuditMessage;
 import com.payment.router.errorhandler.ServiceErrorHandler;
+import com.payment.router.model.AuditMessage;
 import com.payment.router.model.Transaction;
 import com.payment.router.util.OrchestrationUtils;
 
@@ -101,14 +101,16 @@ public class OrchestrationService {
 			//TODO : Step 3: Call Persistence Service
 			
 			String perResponse=callInternalService(persistenceUrl, response,MediaType.APPLICATION_JSON);
-			logger.info("Persistence Response :: "+perResponse);
+			//logger.info("Persistence Response received:: "+perResponse);
+			logger.info("Persistence Response received:: ");
 			
 			//TODO : Step 4: Audit Service for Persistence
 			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(perResponse, messageId, "Persistence"));
 			//TODO : Step 5: Call Validation Service
 			
 			String valResponse=callInternalService(validationUrl, response,MediaType.APPLICATION_JSON);
-			logger.info("Validation Response :: "+valResponse);
+			//logger.info("Validation Response :: "+valResponse);
+			logger.info("Validation Response received:: ");
 			
 			//TODO : Step 6: Audit Service Validation 
 			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(valResponse, messageId, "Validation"));
