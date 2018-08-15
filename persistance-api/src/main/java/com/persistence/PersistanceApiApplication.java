@@ -3,7 +3,9 @@ package com.persistence;
 import static springfox.documentation.builders.PathSelectors.regex;
 
 import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,13 +15,14 @@ import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 @SpringBootApplication
+@EnableAutoConfiguration(exclude={DataSourceAutoConfiguration.class})
 public class PersistanceApiApplication {
 
 	public static void main(String[] args) {
 		SpringApplication.run(PersistanceApiApplication.class, args);
 	}
 
-	@Configuration
+	/*@Configuration
 	@EnableSwagger2
 	public class SwaggerConfig {
 		@Bean
@@ -28,5 +31,5 @@ public class PersistanceApiApplication {
 					.apis(RequestHandlerSelectors.basePackage("com.hcl.persistance")).paths(regex("/persistance-api.*"))
 					.build();
 		}
-	}
+	}*/
 }
