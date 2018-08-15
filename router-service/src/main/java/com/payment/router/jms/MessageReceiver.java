@@ -26,7 +26,7 @@ public class MessageReceiver {
 	@Autowired
 	OrchestrationService service;
 	
-	@JmsListener(destination = "pacs.008.001.07.request.queue", containerFactory = "myFactory")
+	@JmsListener(destination = "pacs.008.001.07.request.queue?consumer.prefetchSize=5", containerFactory = "myFactory",concurrency="10-100")
     public void receiveMessage(Document request,JmsMessageHeaderAccessor jmsMessageHeaderAccessor) throws XmlMappingException, IOException {
 		logger.info("Message Received :" + request);
 		logger.info("Correlation ID in received message :" + jmsMessageHeaderAccessor.getCorrelationId());
