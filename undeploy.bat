@@ -20,6 +20,8 @@ oc delete all --selector app=kafka
 
 oc delete all --selector app=zookeeper
 
+oc delete all --selector app=zipkin-host
+
 oc delete  template apache-kafka
 
 oc delete  template apache-zookeeper

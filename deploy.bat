@@ -12,13 +12,15 @@ oc adm policy add-scc-to-user anyuid -z default
 
 oc login -u developer -p developer
 
-call cd persistance-api
+oc new-app --name="routerdb" mongo
 
-mvn clean install fabric8:deploy -Popenshift -DskipTests
+oc new-app --name="zipkin-host" openzipkin/zipkin
+
+cd persistance-api
+
+call  mvn clean install fabric8:deploy -Popenshift -DskipTests
 
 cd ..
-
-oc new-app --name="routerdb" mongo
 
 oc create sa amq-service-account
 
@@ -26,15 +28,7 @@ oc policy add-role-to-user view system:serviceaccount:payment:amq-service-accoun
 
 oc create -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/amq/amq63-basic.json
 
-oc new-app --name=activemq \
---param=APPLICATION_NAME=activemq \
-openshift/amq63-basic \
--e AMQ_USER=admin \
--e AMQ_PASSWORD=admin \
--e AMQ_TRANSPORTS=openwire,amqp,stomp,mqtt \
--e AMQ_QUEUES=pacs.002.001.09.response.queue,pacs.008.001.07.request.queue \
--e AMQ_MESH_DISCOVERY_TYPE=dns \
--e AMQ_STORAGE_USAGE_LIMIT="1 gb"
+oc new-app --name=activemq --param=APPLICATION_NAME=activemq openshift/amq63-basic -e AMQ_USER=admin -e AMQ_PASSWORD=admin -e AMQ_TRANSPORTS=openwire,amqp,stomp,mqtt -e AMQ_QUEUES=pacs.002.001.09.response.queue,pacs.008.001.07.request.queue -e AMQ_MESH_DISCOVERY_TYPE=dns -e AMQ_STORAGE_USAGE_LIMIT="1 gb"
 
 cd router-service
 
