@@ -1,22 +1,20 @@
-oc login
+oc login -u developer -p developer
 
 oc new-project payment --display-name="payment"
 
 oc project payment
 
-oc new-app -e MYSQL_USER=test MYSQL_PASSWORD=test MYSQL_DATABASE=projectdb registry.access.redhat.com/rhscl/mysql-56-rhel7 --name=persistencedb
+oc login -u system:admin
 
-cd mysql
+oc project payment
 
-source run.sh
+oc adm policy add-scc-to-user anyuid -z default
 
-oc rollout latest persistencedb
+oc login -u developer -p developer
 
-cd ..
+call cd persistance-api
 
-cd persistance-api
-
-call mvn clean install fabric8:deploy -Popenshift -DskipTests
+mvn clean install fabric8:deploy -Popenshift -DskipTests
 
 cd ..
 
@@ -26,20 +24,41 @@ oc create sa amq-service-account
 
 oc policy add-role-to-user view system:serviceaccount:payment:amq-service-account
 
+oc create -f https://raw.githubusercontent.com/jboss-openshift/application-templates/master/amq/amq63-basic.json
+
 oc new-app --name=activemq \
+--param=APPLICATION_NAME=activemq \
+openshift/amq63-basic \
 -e AMQ_USER=admin \
 -e AMQ_PASSWORD=admin \
 -e AMQ_TRANSPORTS=openwire,amqp,stomp,mqtt \
 -e AMQ_QUEUES=pacs.002.001.09.response.queue,pacs.008.001.07.request.queue \
 -e AMQ_MESH_DISCOVERY_TYPE=dns \
--e AMQ_MESH_SERVICE_NAME=activemq \
--e AMQ_MESH_SERVICE_NAMESPACE=payment \
--e AMQ_STORAGE_USAGE_LIMIT="1 gb" \
-registry.access.redhat.com/jboss-amq-6/amq63-openshift
+-e AMQ_STORAGE_USAGE_LIMIT="1 gb"
 
 cd router-service
 
 call mvn clean install fabric8:deploy -Popenshift -DskipTests
 
 cd ..
+
+cd TransformationService
+
+call mvn clean install fabric8:deploy -Popenshift -DskipTests
+
+cd ..
+
+cd ValidationService
+
+call mvn clean install fabric8:deploy -Popenshift -DskipTests
+
+cd ..
+
+oc create -f kafka/zookeeper.yaml
+
+oc new-app apache-zookeeper --name=zookeeper --param=NAME=zookeeper
+
+oc create -f kafka/kafka.yaml
+
+oc new-app apache-kafka --name=kafka --param=NAME=kafka
 
