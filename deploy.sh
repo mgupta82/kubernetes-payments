@@ -17,7 +17,7 @@ oc adm policy add-scc-to-user anyuid -z default
 oc login -u developer -p developer
 
 #############My Sql Persistence DB#########################################
-oc new-app --name=persistencedb https://github.com/mgupta82/payment.git --context-dir=mysql strategy=docker
+#oc new-app --name=persistencedb https://github.com/mgupta82/payment.git --context-dir=mysql strategy=docker
 
 #oc new-app -e MYSQL_USER=test MYSQL_PASSWORD=test MYSQL_DATABASE=projectdb registry.access.redhat.com/rhscl/mysql-56-rhel7 --name=persistencedb
 
@@ -96,9 +96,9 @@ oc new-app apache-kafka --name=kafka --param=NAME=kafka
 
 #sleep 10
 
-#bin/kafka-topics.sh --create --zookeeper kafka:2181 --replication-factor 1 --partitions 1 --topic audit_test
+#bin/kafka-topics.sh --create --zookeeper zookeeper:2181 --replication-factor 1 --partitions 1 --topic audit_test
 
-#bin/kafka-topics.sh --list --zookeeper kafka:2181
+#bin/kafka-topics.sh --list --zookeeper zookeeper:2181
 
 #exit
 

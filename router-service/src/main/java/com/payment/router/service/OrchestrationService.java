@@ -13,8 +13,8 @@ import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
 
-import com.payment.router.model.AuditMessage;
 import com.payment.router.errorhandler.ServiceErrorHandler;
+import com.payment.router.model.AuditMessage;
 import com.payment.router.model.Transaction;
 import com.payment.router.util.OrchestrationUtils;
 
@@ -55,22 +55,22 @@ public class OrchestrationService {
     private KafkaTemplate<String, AuditMessage> kafkaTemplate;
 
 	
-	public void process(String requestxml) {
+	public void process(String requestxml,String corrId) {
 		iso.std.iso._20022.tech.xsd.pacs_008_001.Document request = parseXml(requestxml);
 		if(request!=null) {
-			process(request,requestxml);
+			process(request,requestxml,corrId);
 		}
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request) {
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String corrId) {
 		String requestxml = parseObject(request);
 		if(requestxml!=null) {
-			process(request,requestxml);
+			process(request,requestxml,corrId);
 		}
 		
 	}
 	
-	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String requestXml) {
+	public void process(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String requestXml,String corrId) {
 		
 		//Extract Message ID
 		String messageId = extractMessageId(request);
@@ -80,7 +80,7 @@ public class OrchestrationService {
 		}
 		
 		//Check for duplicate request
-		if(processIfDuplicateRequest(request,messageId)) {
+		if(processIfDuplicateRequest(request,messageId,corrId)) {
 			return;
 		}
 		
@@ -101,14 +101,16 @@ public class OrchestrationService {
 			//TODO : Step 3: Call Persistence Service
 			
 			String perResponse=callInternalService(persistenceUrl, response,MediaType.APPLICATION_JSON);
-			logger.info("Persistence Response :: "+perResponse);
+			//logger.info("Persistence Response received:: "+perResponse);
+			logger.info("Persistence Response received:: ");
 			
 			//TODO : Step 4: Audit Service for Persistence
 			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(perResponse, messageId, "Persistence"));
 			//TODO : Step 5: Call Validation Service
 			
 			String valResponse=callInternalService(validationUrl, response,MediaType.APPLICATION_JSON);
-			logger.info("Validation Response :: "+valResponse);
+			//logger.info("Validation Response :: "+valResponse);
+			logger.info("Validation Response received:: ");
 			
 			//TODO : Step 6: Audit Service Validation 
 			kafkaTemplate.send(kafkaTopic,OrchestrationUtils.convertResponseToAuditMessage(valResponse, messageId, "Validation"));
@@ -118,11 +120,11 @@ public class OrchestrationService {
 			//TODO : Step 8: Audit Service for Core
 			
 			//Send positive ACK
-			responseService.sendAck(request, messageId,transaction);			
+			responseService.sendAck(request, messageId,transaction,corrId);			
 			logger.info("Message Processed Successfully :" + messageId);			
 		}catch(Exception ex) {
         	logger.error("Failed to Process Message "+messageId, ex);
-        	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,transaction);		
+        	responseService.sendNack(request, messageId, ErrorCode.GENERIC_ERROR,transaction,corrId);		
 		}
 	}
 	
@@ -202,7 +204,7 @@ public class OrchestrationService {
 	 * @param messageId
 	 * @return
 	 */
-	public boolean processIfDuplicateRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId) {
+	public boolean processIfDuplicateRequest(iso.std.iso._20022.tech.xsd.pacs_008_001.Document request,String messageId,String corrId) {
 		logger.info("Checking duplicate request  : "+messageId);
 		try {
 			Transaction transaction = transactionService.findExistingRequest(messageId, extractTransactionId(request));
@@ -210,7 +212,7 @@ public class OrchestrationService {
 	    		logger.info("Duplicate Request Received "+messageId);
 	    		if(transaction.getStatus().equals("ACK") 
 	    				|| transaction.getStatus().equals("NACK")) {
-	    			responseService.playbackResponse(transaction, messageId);
+	    			responseService.playbackResponse(transaction, messageId,corrId);
 	    		}
 	    		return true;
 			}

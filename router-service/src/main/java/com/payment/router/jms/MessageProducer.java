@@ -20,9 +20,13 @@ public class MessageProducer {
 	@Autowired
 	JmsTemplate jmsTemplate;
 	
-	public void send(Document document) {
+	public void send(Document document,String corrId) {
 		logger.info("Sending Message : "+ document.getFIToFIPmtStsRpt().getGrpHdr().getMsgId());
-		this.jmsTemplate.convertAndSend("pacs.002.001.09.response.queue", document);	
+		this.jmsTemplate.convertAndSend("pacs.002.001.09.response.queue", document,m -> {
+			logger.info("setting standard JMS headers before sending");
+            m.setJMSCorrelationID(corrId);
+            return m;
+        });	
 		logger.info("Message Sent : "+ document.getFIToFIPmtStsRpt().getGrpHdr().getMsgId());
 	}
 

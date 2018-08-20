@@ -43,16 +43,10 @@ services:
     ports:
     - 27017:27017
 
-  persistence-db:
-    image: payment/persistencedb
-    restart: always
-    ports: 
-    - 3306:3306
-
   persistance-service:
     image: payment/persistance-api
     links:
-    - persistence-db:persistencedb
+    - router-db:routerdb
     - zipkin-host:zipkin-host
     ports:
     - 8192:8192

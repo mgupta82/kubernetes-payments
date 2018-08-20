@@ -12,9 +12,11 @@ import org.springframework.transaction.annotation.Transactional;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.persistence.entity.PacsMessage;
 import com.persistence.entity.PersistanceTransaction;
 import com.persistence.json.RequestJsonObj;
 import com.persistence.message.PersistanceResponseMessage;
+import com.persistence.repository.PersistanceMongoRepository;
 import com.persistence.repository.PersistanceRepository;
 
 @Service
@@ -23,7 +25,8 @@ public class PersistanceServiceImpl implements PersistanceService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	PersistanceRepository persistanceRepository;
+	//PersistanceRepository persistanceRepository;
+	PersistanceMongoRepository mongoRepository;
 
 	ObjectMapper mapper = new ObjectMapper();
 
@@ -34,13 +37,17 @@ public class PersistanceServiceImpl implements PersistanceService {
 	public PersistanceResponseMessage processDataObj(RequestJsonObj requestJsonObj) {
 
 		try {
-			PersistanceTransaction persistanceTransaction = prepDataObj(requestJsonObj);
-			if (!persistanceRepository.existsByMsgId(persistanceTransaction.getMsg_Id())) {
-				persistanceRepository.save(persistanceTransaction);
+			//PersistanceTransaction persistanceTransaction = prepDataObj(requestJsonObj);
+			//if (!persistanceRepository.existsByMsgId(persistanceTransaction.getMsg_Id())) {
+				//persistanceRepository.save(persistanceTransaction);
+			
+			PacsMessage pacsMessage = persistPacsObj(requestJsonObj);
+			mongoRepository.save(pacsMessage);
 				return new PersistanceResponseMessage("0000", "success", "success");
-			}
+			//}
 
-		} catch (JsonProcessingException e) {
+		}
+		catch (JsonProcessingException e) {
 			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Parsing error", "error");
 		} catch (ParseException e) {
@@ -50,7 +57,6 @@ public class PersistanceServiceImpl implements PersistanceService {
 			logger.error(e.getMessage(), e);
 			return new PersistanceResponseMessage("0001", "Persistence error", "error");
 		}
-		return new PersistanceResponseMessage("0001", "Persistence error", "error");
 	}
 
 	private PersistanceTransaction prepDataObj(RequestJsonObj requestJsonObj)
@@ -80,6 +86,14 @@ public class PersistanceServiceImpl implements PersistanceService {
 				requestJsonObj.getDocument().getFIToFICstmrCdtTrf().getCdtTrfTxInf().getIntrBkSttlmAmt().getCcy());
 		persistanceTransaction.setRequest_obj(mapper.writeValueAsString(requestJsonObj));
 		return persistanceTransaction;
+	}
+	
+	private PacsMessage persistPacsObj(RequestJsonObj requestJsonObj)
+			throws ParseException, JsonProcessingException {
+		PacsMessage pacsMessage = new PacsMessage();
+		pacsMessage.setMessageId(requestJsonObj.getDocument().getFIToFICstmrCdtTrf().getGrpHdr().getMsgId());
+		pacsMessage.setRequest_obj(mapper.writeValueAsString(requestJsonObj));
+		return pacsMessage;
 	}
 
 }
