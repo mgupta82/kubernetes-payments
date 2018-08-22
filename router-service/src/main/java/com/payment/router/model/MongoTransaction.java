@@ -5,6 +5,7 @@ import java.util.UUID;
 import org.springframework.context.annotation.Profile;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.index.Indexed;
 
 @Document
 public class MongoTransaction implements Transaction {
@@ -12,6 +13,7 @@ public class MongoTransaction implements Transaction {
 	@Id
 	private UUID id;
 	
+	@Indexed
 	private String messageId;
 	
 	private String transactionId;
