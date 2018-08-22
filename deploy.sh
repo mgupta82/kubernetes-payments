@@ -16,6 +16,8 @@ oc adm policy add-scc-to-user anyuid -z default
 
 oc login -u developer -p developer
 
+oc new-app --name="zipkin-host" openzipkin/zipkin
+
 #############My Sql Persistence DB#########################################
 #oc new-app --name=persistencedb https://github.com/mgupta82/payment.git --context-dir=mysql strategy=docker
 

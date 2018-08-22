@@ -28,5 +28,7 @@ oc delete  template apache-kafka
 
 oc delete  template apache-zookeeper
 
+oc delete all --selector app=zipkin-host
+
 oc delete project payment
 
